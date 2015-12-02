@@ -2,6 +2,7 @@ package org.nubomedia.qosmanager.connectivitymanageragent.json;
 
 
 import com.google.gson.annotations.SerializedName;
+import org.nubomedia.qosmanager.values.Quality;
 
 /**
  * Created by maa on 04.11.15.
@@ -17,6 +18,12 @@ public class QosQueueValues {
     public QosQueueValues(String min_bitrate, String max_bitrate) {
         this.min_bitrate = min_bitrate;
         this.max_bitrate = max_bitrate;
+    }
+
+    public QosQueueValues(Quality quality){
+
+        this.min_bitrate = quality.getMin_rate();
+        this.max_bitrate = quality.getMax_rate();
     }
 
     public String getMin_bitrate() {

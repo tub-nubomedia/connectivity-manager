@@ -1,0 +1,36 @@
+package org.nubomedia.qosmanager.connectivitymanageragent.json;
+
+import java.util.List;
+
+/**
+ * Created by maa on 02.12.15.
+ */
+public class FlowServer {
+
+    private String server_id;
+    private List<Flow> qos_flows;
+
+    public FlowServer(String server_id, List<Flow> qos_flows) {
+        this.server_id = server_id;
+        this.qos_flows = qos_flows;
+    }
+
+    public FlowServer() {
+    }
+
+    public String getServer_id() {
+        return server_id;
+    }
+
+    public void setServer_id(String server_id) {
+        this.server_id = server_id;
+    }
+
+    public List<Flow> getQos_flows() {
+        return qos_flows;
+    }
+
+    public void setQos_flows(List<Flow> qos_flows) {
+        this.qos_flows = qos_flows;
+    }
+}
