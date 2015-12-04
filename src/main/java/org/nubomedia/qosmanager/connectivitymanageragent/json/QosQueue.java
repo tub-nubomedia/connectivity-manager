@@ -1,12 +1,17 @@
 package org.nubomedia.qosmanager.connectivitymanageragent.json;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 /**
  * Created by maa on 10.11.15.
  */
+@Entity
 public class QosQueue {
 
-    private QosQueueValues rates;
+    @Id
     private String queue_uuid;
+    private QosQueueValues rates;
     private String id;
 
     public QosQueue() {

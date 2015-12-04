@@ -24,4 +24,21 @@ public class Host {
         this.hypervisors = hypervisors;
     }
 
+    public String belongsTo(String serverName){
+
+        for (Datacenter datacenter : hypervisors){
+
+            if (datacenter.getServers().contains("serverName")){
+
+                return datacenter.getName();
+
+            }
+
+        }
+
+        return null;
+    }
+
+
+
 }

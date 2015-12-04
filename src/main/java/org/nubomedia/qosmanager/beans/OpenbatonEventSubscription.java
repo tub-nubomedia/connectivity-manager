@@ -2,9 +2,9 @@ package org.nubomedia.qosmanager.beans;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
+import org.hibernate.event.service.spi.DuplicationStrategy;
 import org.nubomedia.qosmanager.openbaton.OpenbatonEvent;
 import org.nubomedia.qosmanager.utils.ConfigReader;
-import org.openbaton.catalogue.mano.descriptor.InternalVirtualLink;
 import org.openbaton.catalogue.mano.record.NetworkServiceRecord;
 import org.openbaton.catalogue.mano.record.VirtualLinkRecord;
 import org.openbaton.catalogue.mano.record.VirtualNetworkFunctionRecord;
@@ -16,7 +16,6 @@ import org.openbaton.sdk.api.exception.SDKException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -32,8 +31,9 @@ public class OpenbatonEventSubscription {
     private NFVORequestor requestor;
     private Logger logger;
     private Properties properties;
-    @Autowired private ApplicationEventPublisher publisher;
+    @Autowired QoSCreator creator;
     @Autowired private Gson mapper;
+
 
     @PostConstruct
     private void init() throws SDKException, IOException {
@@ -44,13 +44,12 @@ public class OpenbatonEventSubscription {
 
         EventEndpoint eventEndpoint = new EventEndpoint();
         eventEndpoint.setType(EndpointType.RABBIT);
-        eventEndpoint.setEvent(Action.INSTANTIATE_FINISH);
         requestor.getEventAgent().create(eventEndpoint);
 
     }
 
     public void receiveNewNsr(String message){
-        logger.info("received new NSR " + message);
+        logger.info("received new event " + message);
         OpenbatonEvent evt;
 
         try {
@@ -62,13 +61,24 @@ public class OpenbatonEventSubscription {
             return;
         }
 
+
         NetworkServiceRecord nsr = evt.getPayload();
 
         for (VirtualNetworkFunctionRecord vnfr : nsr.getVnfr()){
 
             for (VirtualLinkRecord vlr : vnfr.getConnected_external_virtual_link()){
                 if(!vlr.getQos().isEmpty()){
+                    for(String qosAttr : vlr.getQos()){
+                        if(qosAttr.contains("minimum_bandwith")){
+                            if(evt.getAction().equals(Action.INSTANTIATE_FINISH)){
+                                creator.addQos(nsr.getVnfr());
+                            }
+                            else if (evt.getAction().equals(Action.RELEASE_RESOURCES_FINISH)){
+                                creator.removeQos(nsr.getVnfr());
+                            }
+                        }
 
+                    }
                 }
             }
 

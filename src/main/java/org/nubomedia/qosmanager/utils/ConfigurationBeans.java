@@ -11,8 +11,10 @@ import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -45,6 +47,7 @@ public class ConfigurationBeans {
 
     @Bean
     public ConnectionFactory getConnectionFactory(Environment env){
+        logger.debug("Created ConnectionFactory");
         CachingConnectionFactory factory = new CachingConnectionFactory(env.getProperty("spring.rabbitmq.host"));
         factory.setPassword(env.getProperty("spring.rabbitmq.password"));
         factory.setUsername(env.getProperty("spring.rabbitmq.username"));
@@ -53,22 +56,35 @@ public class ConfigurationBeans {
 
     @Bean
     public TopicExchange getTopic(){
+        logger.debug("Created Topic Exchange");
         return new TopicExchange("openbaton-exchange");
     }
 
     @Bean
-    public Queue getSubscriptionQueue(){
-        return new Queue("nsr-creation",false);
+    public Queue getCreationQueue(){
+        logger.debug("Created Queue for NSR event");
+        return new Queue("nsr-events",false);
     }
 
     @Bean
-    public Binding setBinding(Queue queue, TopicExchange topicExchange){
+    public Binding setCreationBinding(Queue queue, TopicExchange topicExchange){
+        logger.debug("Created Binding for NSR event");
         return BindingBuilder.bind(queue).to(topicExchange).with("ns-creation");
     }
 
     @Bean
     public MessageListenerAdapter setMessageListenerAdapter(OpenbatonEventSubscription subscription){
         return new MessageListenerAdapter(subscription,"receiveNewNsr");
+    }
+
+    @Bean
+    public SimpleMessageListenerContainer setMessageContainer(ConnectionFactory connectionFactory, Queue queue, MessageListenerAdapter adapter){
+        logger.debug("Created MessageContainer for NSR event");
+        SimpleMessageListenerContainer res = new SimpleMessageListenerContainer();
+        res.setConnectionFactory(connectionFactory);
+        res.setQueues(queue);
+        res.setMessageListener(adapter);
+        return res;
     }
 
 }

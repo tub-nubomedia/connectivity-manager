@@ -1,14 +1,18 @@
 package org.nubomedia.qosmanager.connectivitymanageragent.json;
 
+import javax.persistence.*;
 import java.util.List;
 
 /**
  * Created by maa on 04.11.15.
  */
+@Entity
 public class Server {
 
+    @Id
     private String id;
     private String name;
+    @OneToMany(targetEntity = InterfaceQoS.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER,mappedBy = "server",orphanRemoval = true)
     private List<InterfaceQoS> interfaces;
 
     public Server() {

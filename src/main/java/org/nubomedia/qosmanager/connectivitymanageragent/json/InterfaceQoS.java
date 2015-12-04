@@ -1,10 +1,19 @@
 package org.nubomedia.qosmanager.connectivitymanageragent.json;
 
+import com.google.gson.annotations.Expose;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 /**
  * Created by maa on 24.11.15.
  */
+@Entity
 public class InterfaceQoS {
 
+    @Id
+    @Expose(serialize = false, deserialize = false)
+    private String id;
     private String ip;
     private String ovs_port_number;
     private Qos qos;
@@ -16,6 +25,14 @@ public class InterfaceQoS {
     }
 
     public InterfaceQoS() {
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getIp() {

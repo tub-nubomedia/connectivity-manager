@@ -1,7 +1,8 @@
-package org.nubomedia.qosmanager.connectivitymanageragent.rest;
+package org.nubomedia.qosmanager.connectivitymanageragent.beans;
 
 import com.google.gson.Gson;
 import org.nubomedia.qosmanager.connectivitymanageragent.AddQueue;
+import org.nubomedia.qosmanager.connectivitymanageragent.json.Flow;
 import org.nubomedia.qosmanager.connectivitymanageragent.json.Host;
 import org.nubomedia.qosmanager.connectivitymanageragent.json.QosRequest;
 import org.nubomedia.qosmanager.connectivitymanageragent.json.Server;
@@ -9,7 +10,6 @@ import org.nubomedia.qosmanager.utils.ConfigReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -127,7 +127,37 @@ public class ConnectivityManagerRequestor {
         else{
             return mapper.fromJson(addResp.getBody(),AddQueue.class);
         }
+    }
 
+    public Flow setFlow(Flow flow){
+
+        String url = cmProp.getProperty("cmUrl") + "/flow";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> flowEntity = new HttpEntity<>(mapper.toJson(flow,Flow.class),headers);
+        ResponseEntity<String> addFlow = template.exchange(url,HttpMethod.POST,flowEntity,String.class);
+
+        logger.debug("FLOW RESPONSE: sent flow configuration " + flow.toString() + " and received " + addFlow.getBody());
+
+        if (!addFlow.getStatusCode().is2xxSuccessful()){
+            logger.debug("Status code is " + addFlow.getStatusCode());
+            return null;
+        }
+        else {
+            return mapper.fromJson(addFlow.getBody(), Flow.class);
+        }
+    }
+
+    public HttpStatus deleteFlow(String hypervisor_name, String flow_protocol,String flow_ip){
+
+        String url = cmProp.getProperty("cmUrl") + "/flow/" + hypervisor_name + "/" + flow_protocol + "/" + flow_ip;
+        HttpHeaders headers = new HttpHeaders();
+        HttpEntity<String> deleteFlowEntity = new HttpEntity<>(headers);
+        ResponseEntity<String> deleteResponse = template.exchange(url,HttpMethod.DELETE,deleteFlowEntity,String.class);
+
+        logger.debug("Deleted flow with result " + deleteResponse.getStatusCode());
+
+        return deleteResponse.getStatusCode();
     }
 
 }

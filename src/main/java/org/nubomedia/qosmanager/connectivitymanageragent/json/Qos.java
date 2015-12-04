@@ -1,14 +1,18 @@
 package org.nubomedia.qosmanager.connectivitymanageragent.json;
 
+import javax.persistence.*;
 import java.util.List;
 
 /**
  * Created by maa on 04.11.15.
  */
+@Entity
 public class Qos {
 
-    private List<QosQueue> queues;
+    @Id
     private String qos_uuid;
+    @OneToMany(targetEntity = QosQueue.class,cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    private List<QosQueue> queues;
 
     public Qos() {
     }

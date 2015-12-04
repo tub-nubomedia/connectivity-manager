@@ -5,6 +5,7 @@ package org.nubomedia.qosmanager.connectivitymanageragent.json;
  */
 public class Flow {
 
+    private String id;
     private String ovs_port;
     private String src_ipv4;
     private String dest_ipv4;
@@ -26,6 +27,14 @@ public class Flow {
 
     public String getOvs_port() {
         return ovs_port;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public void setOvs_port(String ovs_port) {
