@@ -1,5 +1,6 @@
 package org.nubomedia.qosmanager.connectivitymanageragent.json;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,7 +39,4 @@ public class Host {
 
         return null;
     }
-
-
-
 }
