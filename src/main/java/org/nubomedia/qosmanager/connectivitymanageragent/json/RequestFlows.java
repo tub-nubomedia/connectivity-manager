@@ -7,20 +7,20 @@ import java.util.List;
  */
 public class RequestFlows {
 
-    private List<FlowHypervisor> flows;
+    private List<FlowServer> flows;
 
-    public RequestFlows(List<FlowHypervisor> flows) {
+    public RequestFlows(List<FlowServer> flows) {
         this.flows = flows;
     }
 
     public RequestFlows() {
     }
 
-    public List<FlowHypervisor> getFlows() {
+    public List<FlowServer> getFlows() {
         return flows;
     }
 
-    public void setFlows(List<FlowHypervisor> flows) {
+    public void setFlows(List<FlowServer> flows) {
         this.flows = flows;
     }
 }

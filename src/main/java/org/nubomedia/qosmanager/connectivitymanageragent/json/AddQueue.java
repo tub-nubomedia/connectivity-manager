@@ -1,6 +1,4 @@
-package org.nubomedia.qosmanager.connectivitymanageragent;
-
-import org.nubomedia.qosmanager.connectivitymanageragent.json.Qos;
+package org.nubomedia.qosmanager.connectivitymanageragent.json;
 
 import java.util.List;
 

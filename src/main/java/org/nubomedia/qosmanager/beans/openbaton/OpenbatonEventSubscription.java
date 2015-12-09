@@ -1,8 +1,7 @@
-package org.nubomedia.qosmanager.beans;
+package org.nubomedia.qosmanager.beans.openbaton;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
-import org.hibernate.event.service.spi.DuplicationStrategy;
 import org.nubomedia.qosmanager.openbaton.OpenbatonEvent;
 import org.nubomedia.qosmanager.utils.ConfigReader;
 import org.openbaton.catalogue.mano.record.NetworkServiceRecord;
@@ -71,10 +70,10 @@ public class OpenbatonEventSubscription {
                     for(String qosAttr : vlr.getQos()){
                         if(qosAttr.contains("minimum_bandwith")){
                             if(evt.getAction().equals(Action.INSTANTIATE_FINISH)){
-                                creator.addQos(nsr.getVnfr());
+                                creator.addQos(nsr.getVnfr(),nsr.getId());
                             }
                             else if (evt.getAction().equals(Action.RELEASE_RESOURCES_FINISH)){
-                                creator.removeQos(nsr.getVnfr());
+                                creator.removeQos(nsr.getVnfr(),nsr.getId());
                             }
                         }
 

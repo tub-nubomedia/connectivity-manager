@@ -9,15 +9,25 @@ import java.util.List;
  */
 public class ServerQoS {
 
+    @SerializedName("hypervisor_id") private String hypervisorId;
     @SerializedName("server_id") private String serverId;
     private List<InterfaceQoS> interfaces;
 
     public ServerQoS() {
     }
 
-    public ServerQoS(String serverId, List<InterfaceQoS> interfaces) {
+    public ServerQoS(String hypervisorId, String serverId, List<InterfaceQoS> interfaces) {
+        this.hypervisorId = hypervisorId;
         this.serverId = serverId;
         this.interfaces = interfaces;
+    }
+
+    public String getHypervisorId() {
+        return hypervisorId;
+    }
+
+    public void setHypervisorId(String hypervisorId) {
+        this.hypervisorId = hypervisorId;
     }
 
     public String getServerId() {
@@ -28,11 +38,11 @@ public class ServerQoS {
         this.serverId = serverId;
     }
 
-    public List<InterfaceQoS> getValues() {
+    public List<InterfaceQoS> getInterfaces() {
         return interfaces;
     }
 
-    public void setValues(List<InterfaceQoS> interfaces) {
+    public void setInterfaces(List<InterfaceQoS> interfaces) {
         this.interfaces = interfaces;
     }
 
@@ -44,14 +54,14 @@ public class ServerQoS {
         ServerQoS serverQoS = (ServerQoS) o;
 
         if (!getServerId().equals(serverQoS.getServerId())) return false;
-        return getValues().equals(serverQoS.getValues());
+        return getInterfaces().equals(serverQoS.getInterfaces());
 
     }
 
     @Override
     public int hashCode() {
         int result = getServerId().hashCode();
-        result = 31 * result + getValues().hashCode();
+        result = 31 * result + getInterfaces().hashCode();
         return result;
     }
 }

@@ -37,4 +37,12 @@ public class Qos {
     public void setQos_uuid(String qos_uuid) {
         this.qos_uuid = qos_uuid;
     }
+
+    public int getActualID (){
+        return queues.size(); //DO NOT CREATE QUEUE WITH ID 0 ON OVS!!!
+    }
+
+    public void addQueue (QosQueue queue){
+        this.queues.add(queue);
+    }
 }

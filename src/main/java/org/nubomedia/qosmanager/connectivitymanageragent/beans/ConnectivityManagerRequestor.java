@@ -1,11 +1,8 @@
 package org.nubomedia.qosmanager.connectivitymanageragent.beans;
 
 import com.google.gson.Gson;
-import org.nubomedia.qosmanager.connectivitymanageragent.AddQueue;
-import org.nubomedia.qosmanager.connectivitymanageragent.json.Flow;
-import org.nubomedia.qosmanager.connectivitymanageragent.json.Host;
-import org.nubomedia.qosmanager.connectivitymanageragent.json.QosRequest;
-import org.nubomedia.qosmanager.connectivitymanageragent.json.Server;
+import org.nubomedia.qosmanager.connectivitymanageragent.json.AddQueue;
+import org.nubomedia.qosmanager.connectivitymanageragent.json.*;
 import org.nubomedia.qosmanager.utils.ConfigReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,12 +49,12 @@ public class ConnectivityManagerRequestor {
         }
     }
 
-    public QosRequest setQoS(QosRequest qosRequest){
+    public QosAdd setQoS(QosAdd qosRequest){
 
         String url = cmProp.getProperty("cmUrl") + "/qoses";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> setEntity = new HttpEntity<>(mapper.toJson(qosRequest,QosRequest.class),headers);
+        HttpEntity<String> setEntity = new HttpEntity<>(mapper.toJson(qosRequest,QosAdd.class),headers);
         ResponseEntity<String> insert = template.exchange(url,HttpMethod.POST,setEntity,String.class);
 
         logger.debug("Setting of QoS has produced http status:" + insert.getStatusCode() + " with body: " + insert.getBody());
@@ -66,7 +63,7 @@ public class ConnectivityManagerRequestor {
             return null;
         }
         else {
-            return mapper.fromJson(insert.getBody(),QosRequest.class);
+            return mapper.fromJson(insert.getBody(),QosAdd.class);
         }
     }
 
@@ -129,12 +126,12 @@ public class ConnectivityManagerRequestor {
         }
     }
 
-    public Flow setFlow(Flow flow){
+    public RequestFlows setFlow(RequestFlows flow){
 
         String url = cmProp.getProperty("cmUrl") + "/flow";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> flowEntity = new HttpEntity<>(mapper.toJson(flow,Flow.class),headers);
+        HttpEntity<String> flowEntity = new HttpEntity<>(mapper.toJson(flow,RequestFlows.class),headers);
         ResponseEntity<String> addFlow = template.exchange(url,HttpMethod.POST,flowEntity,String.class);
 
         logger.debug("FLOW RESPONSE: sent flow configuration " + flow.toString() + " and received " + addFlow.getBody());
@@ -144,7 +141,7 @@ public class ConnectivityManagerRequestor {
             return null;
         }
         else {
-            return mapper.fromJson(addFlow.getBody(), Flow.class);
+            return mapper.fromJson(addFlow.getBody(), RequestFlows.class);
         }
     }
 

@@ -2,7 +2,7 @@ package org.nubomedia.qosmanager.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.nubomedia.qosmanager.beans.OpenbatonEventSubscription;
+import org.nubomedia.qosmanager.beans.openbaton.OpenbatonEventSubscription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Binding;
@@ -14,7 +14,6 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -42,7 +41,7 @@ public class ConfigurationBeans {
 
     @Bean
     public Gson getMapper(){
-        return new GsonBuilder().create();
+        return new GsonBuilder().serializeNulls().create();
     }
 
     @Bean

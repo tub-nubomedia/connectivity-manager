@@ -2,24 +2,20 @@ package org.nubomedia.qosmanager.openbaton;
 
 import org.nubomedia.qosmanager.values.Quality;
 
-import java.util.Map;
-
 /**
- * Created by maa on 07.12.15.
+ * Created by maa on 09.12.15.
  */
-public class QoSMapper {
+public class QoSReference {
 
     private String ip;
-    private String netName;
     private Quality quality;
 
-    public QoSMapper(String ip, String netName, Quality quality) {
+    public QoSReference(String ip, Quality quality) {
         this.ip = ip;
-        this.netName = netName;
         this.quality = quality;
     }
 
-    public QoSMapper() {
+    public QoSReference() {
     }
 
     public String getIp() {
@@ -36,13 +32,5 @@ public class QoSMapper {
 
     public void setQuality(Quality quality) {
         this.quality = quality;
-    }
-
-    public String getNetName() {
-        return netName;
-    }
-
-    public void setNetName(String netName) {
-        this.netName = netName;
     }
 }

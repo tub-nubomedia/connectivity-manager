@@ -41,4 +41,31 @@ public class Server {
     public void setInterfaces(List<InterfaceQoS> interfaces) {
         this.interfaces = interfaces;
     }
+
+    public InterfaceQoS getFromIp(String ip){
+
+        for(InterfaceQoS iface : interfaces){
+            if(iface.getIp().equals(ip))
+                return iface;
+        }
+        return null;
+    }
+
+    public void updateInterfaces (List<InterfaceQoS> ifaces){
+
+        for(InterfaceQoS updatedIface : ifaces){
+            this.updateInterface(updatedIface);
+        }
+    }
+
+    private void updateInterface(InterfaceQoS iface){
+
+        for (InterfaceQoS oldIface : interfaces){
+
+            if(oldIface.getIp().equals(iface.getIp())){
+                interfaces.remove(oldIface);
+                interfaces.add(iface);
+            }
+        }
+    }
 }

@@ -7,6 +7,7 @@ import java.util.List;
  */
 public class FlowServer {
 
+    private String hypervisor_id;
     private String server_id;
     private List<Flow> qos_flows;
 
@@ -16,6 +17,14 @@ public class FlowServer {
     }
 
     public FlowServer() {
+    }
+
+    public String getHypervisor_id() {
+        return hypervisor_id;
+    }
+
+    public void setHypervisor_id(String hypervisor_id) {
+        this.hypervisor_id = hypervisor_id;
     }
 
     public String getServer_id() {
