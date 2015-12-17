@@ -55,7 +55,7 @@
         }
       ],
       "vnfPackage":{
-        "scriptsLink":"https://gitlab.fokus.fraunhofer.de/openbaton/scripts-test-public.git"
+        "scriptsLink":"https://github.com/charliemaiors/scripts-test.git"
       }
     },
     {
@@ -117,7 +117,7 @@
         }
       ],
       "vnfPackage":{
-        "scriptsLink":"https://gitlab.fokus.fraunhofer.de/openbaton/scripts-test-public.git"
+        "scriptsLink":"https://github.com/charliemaiors/scripts-test.git"
       }
     }
   ],

@@ -4,7 +4,7 @@
   "tenant":"demo",
   "username":"admin",
   "password":"opensdncore",
-  "keyPair":"maa",
+  "keyPair":"stack",
   "securityGroups": [
     "default"
   ],

@@ -1,0 +1,1070 @@
+{
+  "id": "b186db8a-ad3f-49df-85a8-3eb17ae0e6ee",
+  "auto_scale_policy": [],
+  "connection_point": [],
+  "monitoring_parameter": [],
+  "service_deployment_flavour": null,
+  "vendor": "tbr",
+  "version": "0.1",
+  "vlr": [
+    {
+      "id": "58f1c038-4ebc-4365-9216-797e1d728c64",
+      "hb_version": 0,
+      "extId": "4746eff6-3cfa-4634-b529-f3510fd7d52e",
+      "root_requirement": null,
+      "leaf_requirement": null,
+      "qos": [],
+      "test_access": [],
+      "connectivity_type": null,
+      "name": "private",
+      "vendor": null,
+      "version": null,
+      "number_of_endpoints": 0,
+      "parent_ns": "ce81f6ff-45b4-4011-bd83-61d722eeb8af",
+      "vnffgr_reference": [],
+      "descriptor_reference": "12fc67fe-40ce-4af9-a237-fa2843698eb1",
+      "vim_id": "516a813c-9de1-4201-bf55-3e37d264263f",
+      "allocated_capacity": [],
+      "status": "NORMALOPERATION",
+      "notification": [],
+      "lifecycle_event_history": [],
+      "audit_log": [],
+      "connection": [
+        "0f49ae3b-ae37-460d-a8a8-f9a7137094db",
+        "3a554980-bf7f-4961-ab88-8f0a1b2ca334"
+      ]
+    }
+  ],
+  "vnfr": [
+    {
+      "id": "ac644a7c-02f5-46f2-ac1c-d57f6d194191",
+      "hb_version": 4,
+      "auto_scale_policy": [],
+      "connection_point": [],
+      "deployment_flavour_key": "m1.small",
+      "configurations": {
+        "id": "b24efa57-066f-422f-9c21-4813ffaa7583",
+        "version": 3,
+        "configurationParameters": [
+          {
+            "id": "d6f10285-6145-4f93-93b6-b75b5e8558ea",
+            "version": 0,
+            "confKey": "new_key",
+            "value": "new_value"
+          }
+        ],
+        "name": "config_name"
+      },
+      "lifecycle_event": [
+        {
+          "id": "de942b1b-108d-417c-80aa-31b18e1083bf",
+          "version": 4,
+          "event": "INSTANTIATE",
+          "lifecycle_events": [
+            "install.sh"
+          ]
+        },
+        {
+          "id": "f0fe4a20-ff4e-4d4d-b373-2793a5d251a4",
+          "version": 4,
+          "event": "CONFIGURE",
+          "lifecycle_events": [
+            "server_configure.sh"
+          ]
+        }
+      ],
+      "lifecycle_event_history": [
+        {
+          "id": "23436b2a-94a0-40c1-a4e8-be177446270d",
+          "version": 0,
+          "event": "GRANTED",
+          "lifecycle_events": []
+        }
+      ],
+      "localization": null,
+      "monitoring_parameter": [],
+      "vdu": [
+        {
+          "id": "23145065-e347-4bdf-aa0c-80f13d66cffa",
+          "version": 4,
+          "name": null,
+          "vm_image": [
+            "ubuntu-14.04-server-cloudimg-amd64-disk1"
+          ],
+          "computation_requirement": null,
+          "virtual_memory_resource_element": null,
+          "virtual_network_bandwidth_resource": null,
+          "lifecycle_event": [],
+          "vdu_constraint": null,
+          "high_availability": null,
+          "scale_in_out": 1,
+          "vnfc": [
+            {
+              "id": "adacda62-bea8-4d65-89b9-1252f183ccbc",
+              "version": 4,
+              "connection_point": [
+                {
+                  "id": "a25f7aec-ae13-487b-b267-00d8800ad86c",
+                  "version": 0,
+                  "type": null,
+                  "virtual_link_reference": "private",
+                  "floatingIp": "random"
+                }
+              ]
+            }
+          ],
+          "vnfc_instance": [
+            {
+              "id": "cb9c89c8-32c3-48a2-92f7-03536b8b1aac",
+              "version": 4,
+              "connection_point": [
+                {
+                  "id": "b31f1b1d-2d5e-412c-9dba-258f4a2243a4",
+                  "version": 0,
+                  "type": null,
+                  "virtual_link_reference": "private",
+                  "floatingIp": "192.168.145.33"
+                }
+              ],
+              "vim_id": "4bcfa485-12a0-4f10-86e3-c07aa21d1973",
+              "vc_id": "81cccdf7-2e5c-4945-bb7a-77a6133dae3b",
+              "hostname": "iperf-client-684",
+              "vnfComponent": {
+                "id": "adacda62-bea8-4d65-89b9-1252f183ccbc",
+                "version": 4,
+                "connection_point": [
+                  {
+                    "id": "a25f7aec-ae13-487b-b267-00d8800ad86c",
+                    "version": 0,
+                    "type": null,
+                    "virtual_link_reference": "private",
+                    "floatingIp": "random"
+                  }
+                ]
+              },
+              "floatingIps": [
+                {
+                  "id": "c44327fc-e900-4df0-a1e8-c09215f39c2d",
+                  "version": 0,
+                  "netName": "private",
+                  "ip": "192.168.145.33"
+                }
+              ],
+              "ips": [
+                {
+                  "id": "076e1b88-e689-48f3-91ec-ec45fcfb8ce3",
+                  "version": 0,
+                  "netName": "private",
+                  "ip": "10.254.6.161"
+                }
+              ]
+            }
+          ],
+          "monitoring_parameter": [],
+          "vimInstance": {
+            "id": "4bcfa485-12a0-4f10-86e3-c07aa21d1973",
+            "version": 0,
+            "name": "internal-docker",
+            "authUrl": "http://192.168.145.30:5000/v2.0",
+            "tenant": "demo",
+            "username": "admin",
+            "password": "opensdncore",
+            "keyPair": "stack",
+            "location": {
+              "id": "a93b245e-18a8-495c-8059-9792bc11064e",
+              "version": 0,
+              "name": "Berlin",
+              "latitude": "52.525876",
+              "longitude": "13.314400"
+            },
+            "securityGroups": [
+              "default"
+            ],
+            "flavours": [
+              {
+                "id": "ea733800-ba13-47d9-9da4-4268c9686bc1",
+                "version": 0,
+                "flavour_key": "m1.nano",
+                "extId": "42",
+                "ram": 64,
+                "disk": 0,
+                "vcpus": 1
+              },
+              {
+                "id": "a5656b2b-19ff-450e-a80a-4241da0e19d9",
+                "version": 0,
+                "flavour_key": "m1.micro",
+                "extId": "84",
+                "ram": 128,
+                "disk": 0,
+                "vcpus": 1
+              },
+              {
+                "id": "c601caa7-8245-4190-9606-afcfb7c2445d",
+                "version": 0,
+                "flavour_key": "m1.tiny",
+                "extId": "1",
+                "ram": 512,
+                "disk": 1,
+                "vcpus": 1
+              },
+              {
+                "id": "db316932-8d62-4ece-863e-9c9070405d8b",
+                "version": 0,
+                "flavour_key": "m1.heat",
+                "extId": "451",
+                "ram": 512,
+                "disk": 0,
+                "vcpus": 1
+              },
+              {
+                "id": "c2e2a1f5-1874-4554-8d38-2234128df62a",
+                "version": 0,
+                "flavour_key": "m1.small",
+                "extId": "2",
+                "ram": 2048,
+                "disk": 20,
+                "vcpus": 1
+              },
+              {
+                "id": "a37cec44-0eca-4437-a370-5408cef4d534",
+                "version": 0,
+                "flavour_key": "m1.large",
+                "extId": "4",
+                "ram": 8192,
+                "disk": 80,
+                "vcpus": 4
+              },
+              {
+                "id": "e02fe840-d85d-4828-ae2c-b508794accbf",
+                "version": 0,
+                "flavour_key": "m1.xlarge",
+                "extId": "5",
+                "ram": 16384,
+                "disk": 160,
+                "vcpus": 8
+              },
+              {
+                "id": "09ae01cb-0d84-4aea-a49a-dac8c287a3c6",
+                "version": 0,
+                "flavour_key": "m1.medium",
+                "extId": "3",
+                "ram": 4096,
+                "disk": 40,
+                "vcpus": 2
+              }
+            ],
+            "type": "openstack",
+            "images": [
+              {
+                "id": "4191dba2-b936-4c6e-8277-2d48a172c7a3",
+                "version": 0,
+                "extId": "15164e20-3882-47ed-b6d1-958b5f8472e3",
+                "name": "dns_shrunken",
+                "minRam": 0,
+                "minDiskSpace": 0,
+                "minCPU": null,
+                "diskFormat": "OPTIONAL.OF(QCOW2)",
+                "containerFormat": "OPTIONAL.OF(BARE)",
+                "created": 1446469319000,
+                "updated": 1446644790000,
+                "public": false
+              },
+              {
+                "id": "bb7e2eae-721c-45db-a948-69ec0570c306",
+                "version": 0,
+                "extId": "fb772464-bda2-426b-9fd0-2a58797a399c",
+                "name": "ems_test_image",
+                "minRam": 0,
+                "minDiskSpace": 20,
+                "minCPU": null,
+                "diskFormat": "OPTIONAL.OF(QCOW2)",
+                "containerFormat": "OPTIONAL.OF(BARE)",
+                "created": 1446651675000,
+                "updated": 1446651695000,
+                "public": false
+              },
+              {
+                "id": "d59237b7-bca6-438d-836a-d627e281841c",
+                "version": 0,
+                "extId": "e9db182b-6ffc-4ef3-9f32-65fb305beb63",
+                "name": "image",
+                "minRam": 1024,
+                "minDiskSpace": 0,
+                "minCPU": null,
+                "diskFormat": "OPTIONAL.OF(QCOW2)",
+                "containerFormat": "OPTIONAL.OF(BARE)",
+                "created": 1447166331000,
+                "updated": 1447166331000,
+                "public": false
+              },
+              {
+                "id": "0f4a232a-e8dd-4f14-9b60-0d4990a1ea9e",
+                "version": 0,
+                "extId": "aeef6fbf-2c20-4c30-8177-fc2e6861ac52",
+                "name": "ems2",
+                "minRam": 0,
+                "minDiskSpace": 20,
+                "minCPU": null,
+                "diskFormat": "OPTIONAL.OF(QCOW2)",
+                "containerFormat": "OPTIONAL.OF(BARE)",
+                "created": 1446653872000,
+                "updated": 1446653890000,
+                "public": false
+              },
+              {
+                "id": "aed60774-9b94-4840-b93a-4afadbad47b6",
+                "version": 0,
+                "extId": "4d3c8af0-acb9-4135-8f39-ae833dc7653e",
+                "name": "ems1",
+                "minRam": 0,
+                "minDiskSpace": 20,
+                "minCPU": null,
+                "diskFormat": "OPTIONAL.OF(QCOW2)",
+                "containerFormat": "OPTIONAL.OF(BARE)",
+                "created": 1446652850000,
+                "updated": 1446652866000,
+                "public": false
+              },
+              {
+                "id": "55fcbff4-8eea-4f25-a926-3652ec12d80c",
+                "version": 0,
+                "extId": "a3d65977-c358-46d4-b013-1e107191c519",
+                "name": "ems",
+                "minRam": 0,
+                "minDiskSpace": 20,
+                "minCPU": null,
+                "diskFormat": "OPTIONAL.OF(QCOW2)",
+                "containerFormat": "OPTIONAL.OF(BARE)",
+                "created": 1446468833000,
+                "updated": 1446468846000,
+                "public": false
+              },
+              {
+                "id": "01110463-be80-4591-a941-19d72c994a34",
+                "version": 0,
+                "extId": "fcfa9ec3-eaad-4d43-ab25-4fed21146250",
+                "name": "5G_fuseco",
+                "minRam": 0,
+                "minDiskSpace": 0,
+                "minCPU": null,
+                "diskFormat": "OPTIONAL.OF(QCOW2)",
+                "containerFormat": "OPTIONAL.OF(BARE)",
+                "created": 1446644686000,
+                "updated": 1446644749000,
+                "public": false
+              },
+              {
+                "id": "bfe1beec-3a7a-42fd-98dc-f4bcca9de503",
+                "version": 0,
+                "extId": "89c28cb5-f2c9-4ed1-89cb-42c9ca511a96",
+                "name": "ubuntu-14.04-server-cloudimg-amd64-disk1",
+                "minRam": 0,
+                "minDiskSpace": 0,
+                "minCPU": null,
+                "diskFormat": "OPTIONAL.OF(QCOW2)",
+                "containerFormat": "OPTIONAL.OF(BARE)",
+                "created": 1445609608000,
+                "updated": 1445609609000,
+                "public": true
+              }
+            ],
+            "networks": [
+              {
+                "id": "d2609b69-ed4d-4bf8-9178-163556c252b3",
+                "version": 0,
+                "name": "net_a",
+                "extId": "75fd9864-9dc1-40d0-b83f-280f35d4e45d",
+                "external": false,
+                "shared": false,
+                "subnets": [
+                  {
+                    "id": "54a5ed15-51d5-4eea-a1ee-e13f153c6ab3",
+                    "version": 0,
+                    "name": "net_a_subnet",
+                    "extId": "1a1e5195-bc94-4cd6-a4ff-96894b1379b9",
+                    "networkId": "75fd9864-9dc1-40d0-b83f-280f35d4e45d",
+                    "cidr": "192.168.31.0/24",
+                    "gatewayIp": "192.168.31.1"
+                  }
+                ]
+              },
+              {
+                "id": "30c2d608-9222-4e8c-a82f-1326ca523529",
+                "version": 0,
+                "name": "internal_nubomedia",
+                "extId": "1e3415a2-d1a7-4e80-a63d-0d5da2324a25",
+                "external": false,
+                "shared": false,
+                "subnets": [
+                  {
+                    "id": "93465cf4-ee25-45b2-9b5e-5dee4ac2fb0e",
+                    "version": 0,
+                    "name": "internal_nubomedia_subnet",
+                    "extId": "3b114706-f8c0-48ec-8d51-dd621cca6417",
+                    "networkId": "1e3415a2-d1a7-4e80-a63d-0d5da2324a25",
+                    "cidr": "192.168.102.0/24",
+                    "gatewayIp": "192.168.102.1"
+                  }
+                ]
+              },
+              {
+                "id": "1d498703-c932-4bae-8a33-316f72272489",
+                "version": 0,
+                "name": "mgmt",
+                "extId": "e85c4d39-49c6-40aa-9c79-1f53abc79ab0",
+                "external": false,
+                "shared": false,
+                "subnets": [
+                  {
+                    "id": "c95c2906-e0b9-486d-a19f-19932b80ad77",
+                    "version": 0,
+                    "name": "mgmt_subnet",
+                    "extId": "2885db97-eeb3-47cb-a599-7c2cfef60f3d",
+                    "networkId": "e85c4d39-49c6-40aa-9c79-1f53abc79ab0",
+                    "cidr": "192.168.221.0/24",
+                    "gatewayIp": "192.168.221.1"
+                  }
+                ]
+              },
+              {
+                "id": "297bff56-b3b3-4a84-9739-b9fdd05cbb97",
+                "version": 0,
+                "name": "public",
+                "extId": "40522151-479a-404a-96b5-f6f4490bc2fe",
+                "external": true,
+                "shared": true,
+                "subnets": [
+                  {
+                    "id": "462eed0e-ee23-4355-8ddc-490738bdabe1",
+                    "version": 0,
+                    "name": "public-subnet",
+                    "extId": "f6c3b499-1fbe-475b-8d36-138a1fd82514",
+                    "networkId": "40522151-479a-404a-96b5-f6f4490bc2fe",
+                    "cidr": "192.168.145.0/24",
+                    "gatewayIp": "192.168.145.1"
+                  }
+                ]
+              },
+              {
+                "id": "172f192a-b234-43b2-8eb7-3aebaba4fc70",
+                "version": 0,
+                "name": "private",
+                "extId": "4746eff6-3cfa-4634-b529-f3510fd7d52e",
+                "external": false,
+                "shared": false,
+                "subnets": [
+                  {
+                    "id": "57e60171-82fd-4787-a781-28793e6cb954",
+                    "version": 0,
+                    "name": "private-subnet",
+                    "extId": "993e0d54-214f-41db-83e1-e2a6a782168d",
+                    "networkId": "4746eff6-3cfa-4634-b529-f3510fd7d52e",
+                    "cidr": "10.254.6.0/24",
+                    "gatewayIp": "10.254.6.1"
+                  }
+                ]
+              }
+            ]
+          },
+          "hostname": "iperf-client",
+          "vimInstanceName": "internal-docker"
+        }
+      ],
+      "vendor": "tbr",
+      "version": "0.1",
+      "virtual_link": [
+        {
+          "id": "d45ab4d8-8302-406f-b9e1-73a0e600b700",
+          "hb_version": 4,
+          "extId": "4746eff6-3cfa-4634-b529-f3510fd7d52e",
+          "root_requirement": null,
+          "leaf_requirement": null,
+          "qos": [
+            "minimum_bandwith:SILVER"
+          ],
+          "test_access": [],
+          "connectivity_type": null,
+          "name": "private",
+          "connection_points_references": []
+        }
+      ],
+      "parent_ns_id": "b186db8a-ad3f-49df-85a8-3eb17ae0e6ee",
+      "descriptor_reference": "46b5deb0-bf96-4063-8eb0-a99831d5b3b7",
+      "vnfm_id": null,
+      "connected_external_virtual_link": [],
+      "vnf_address": [
+        "10.254.6.161"
+      ],
+      "status": "ACTIVE",
+      "notification": [],
+      "audit_log": null,
+      "runtime_policy_info": [],
+      "fault_management_policy": [],
+      "name": "iperf-client",
+      "type": "client",
+      "endpoint": "generic",
+      "vnfPackage": {
+        "id": "a92878b3-4a56-4841-a62b-e2aabe40bd75",
+        "version": 0,
+        "name": null,
+        "imageLink": null,
+        "scriptsLink": "https://github.com/charliemaiors/scripts-test.git",
+        "image": null,
+        "scripts": []
+      },
+      "task": "start",
+      "requires": {
+        "id": "05ce8760-6127-44b0-ba5c-c3b0ac086238",
+        "version": 0,
+        "configurationParameters": [],
+        "name": "requires"
+      },
+      "provides": {
+        "id": "724ffb76-9756-4385-aa66-0452056f2235",
+        "version": 0,
+        "configurationParameters": [],
+        "name": "provides"
+      }
+    },
+    {
+      "id": "dfc9577e-d30d-4ad9-9e24-97869d66a1fb",
+      "hb_version": 3,
+      "auto_scale_policy": [],
+      "connection_point": [],
+      "deployment_flavour_key": "m1.small",
+      "configurations": {
+        "id": "40fdaf69-32ee-4ac4-b73f-567a1ff894a0",
+        "version": 2,
+        "configurationParameters": [
+          {
+            "id": "c0dfd303-0685-4922-bc69-5f10ff2fefb2",
+            "version": 0,
+            "confKey": "new_key",
+            "value": "new_value"
+          }
+        ],
+        "name": "config_name"
+      },
+      "lifecycle_event": [
+        {
+          "id": "841fa382-c4db-4f16-816a-2a66a3f13cff",
+          "version": 3,
+          "event": "INSTANTIATE",
+          "lifecycle_events": [
+            "install.sh",
+            "install-srv.sh"
+          ]
+        }
+      ],
+      "lifecycle_event_history": [
+        {
+          "id": "11b7de1b-c10e-49ff-9fd6-fcd2931e485f",
+          "version": 0,
+          "event": "GRANTED",
+          "lifecycle_events": []
+        }
+      ],
+      "localization": null,
+      "monitoring_parameter": [],
+      "vdu": [
+        {
+          "id": "33bd7362-bbb7-4174-a6c0-6519b30a1c4f",
+          "version": 3,
+          "name": null,
+          "vm_image": [
+            "ubuntu-14.04-server-cloudimg-amd64-disk1"
+          ],
+          "computation_requirement": null,
+          "virtual_memory_resource_element": null,
+          "virtual_network_bandwidth_resource": null,
+          "lifecycle_event": [],
+          "vdu_constraint": null,
+          "high_availability": null,
+          "scale_in_out": 1,
+          "vnfc": [
+            {
+              "id": "60e92fd3-445b-4138-9f1a-d64e85b71e67",
+              "version": 3,
+              "connection_point": [
+                {
+                  "id": "c83a3b99-9647-42ac-8ae4-ec0cac8e6941",
+                  "version": 0,
+                  "type": null,
+                  "virtual_link_reference": "private",
+                  "floatingIp": "random"
+                }
+              ]
+            }
+          ],
+          "vnfc_instance": [
+            {
+              "id": "31bc10a4-f8a2-42d9-9be2-ddf69b350293",
+              "version": 3,
+              "connection_point": [
+                {
+                  "id": "f5a32293-6c78-4d91-866b-c46438df36be",
+                  "version": 0,
+                  "type": null,
+                  "virtual_link_reference": "private",
+                  "floatingIp": "192.168.145.36"
+                }
+              ],
+              "vim_id": "4bcfa485-12a0-4f10-86e3-c07aa21d1973",
+              "vc_id": "2b79b854-358c-489c-b96a-338a97c9f00c",
+              "hostname": "iperf-server-397",
+              "vnfComponent": {
+                "id": "60e92fd3-445b-4138-9f1a-d64e85b71e67",
+                "version": 3,
+                "connection_point": [
+                  {
+                    "id": "c83a3b99-9647-42ac-8ae4-ec0cac8e6941",
+                    "version": 0,
+                    "type": null,
+                    "virtual_link_reference": "private",
+                    "floatingIp": "random"
+                  }
+                ]
+              },
+              "floatingIps": [
+                {
+                  "id": "75a7d112-7a86-4acb-b3d1-1616ed412d71",
+                  "version": 0,
+                  "netName": "private",
+                  "ip": "192.168.145.36"
+                }
+              ],
+              "ips": [
+                {
+                  "id": "b2b675a5-6bff-4d4d-8610-a728d7a5282c",
+                  "version": 0,
+                  "netName": "private",
+                  "ip": "10.254.6.160"
+                }
+              ]
+            }
+          ],
+          "monitoring_parameter": [],
+          "vimInstance": {
+            "id": "4bcfa485-12a0-4f10-86e3-c07aa21d1973",
+            "version": 0,
+            "name": "internal-docker",
+            "authUrl": "http://192.168.145.30:5000/v2.0",
+            "tenant": "demo",
+            "username": "admin",
+            "password": "opensdncore",
+            "keyPair": "stack",
+            "location": {
+              "id": "a93b245e-18a8-495c-8059-9792bc11064e",
+              "version": 0,
+              "name": "Berlin",
+              "latitude": "52.525876",
+              "longitude": "13.314400"
+            },
+            "securityGroups": [
+              "default"
+            ],
+            "flavours": [
+              {
+                "id": "ea733800-ba13-47d9-9da4-4268c9686bc1",
+                "version": 0,
+                "flavour_key": "m1.nano",
+                "extId": "42",
+                "ram": 64,
+                "disk": 0,
+                "vcpus": 1
+              },
+              {
+                "id": "a5656b2b-19ff-450e-a80a-4241da0e19d9",
+                "version": 0,
+                "flavour_key": "m1.micro",
+                "extId": "84",
+                "ram": 128,
+                "disk": 0,
+                "vcpus": 1
+              },
+              {
+                "id": "c601caa7-8245-4190-9606-afcfb7c2445d",
+                "version": 0,
+                "flavour_key": "m1.tiny",
+                "extId": "1",
+                "ram": 512,
+                "disk": 1,
+                "vcpus": 1
+              },
+              {
+                "id": "db316932-8d62-4ece-863e-9c9070405d8b",
+                "version": 0,
+                "flavour_key": "m1.heat",
+                "extId": "451",
+                "ram": 512,
+                "disk": 0,
+                "vcpus": 1
+              },
+              {
+                "id": "c2e2a1f5-1874-4554-8d38-2234128df62a",
+                "version": 0,
+                "flavour_key": "m1.small",
+                "extId": "2",
+                "ram": 2048,
+                "disk": 20,
+                "vcpus": 1
+              },
+              {
+                "id": "a37cec44-0eca-4437-a370-5408cef4d534",
+                "version": 0,
+                "flavour_key": "m1.large",
+                "extId": "4",
+                "ram": 8192,
+                "disk": 80,
+                "vcpus": 4
+              },
+              {
+                "id": "e02fe840-d85d-4828-ae2c-b508794accbf",
+                "version": 0,
+                "flavour_key": "m1.xlarge",
+                "extId": "5",
+                "ram": 16384,
+                "disk": 160,
+                "vcpus": 8
+              },
+              {
+                "id": "09ae01cb-0d84-4aea-a49a-dac8c287a3c6",
+                "version": 0,
+                "flavour_key": "m1.medium",
+                "extId": "3",
+                "ram": 4096,
+                "disk": 40,
+                "vcpus": 2
+              }
+            ],
+            "type": "openstack",
+            "images": [
+              {
+                "id": "4191dba2-b936-4c6e-8277-2d48a172c7a3",
+                "version": 0,
+                "extId": "15164e20-3882-47ed-b6d1-958b5f8472e3",
+                "name": "dns_shrunken",
+                "minRam": 0,
+                "minDiskSpace": 0,
+                "minCPU": null,
+                "diskFormat": "OPTIONAL.OF(QCOW2)",
+                "containerFormat": "OPTIONAL.OF(BARE)",
+                "created": 1446469319000,
+                "updated": 1446644790000,
+                "public": false
+              },
+              {
+                "id": "bb7e2eae-721c-45db-a948-69ec0570c306",
+                "version": 0,
+                "extId": "fb772464-bda2-426b-9fd0-2a58797a399c",
+                "name": "ems_test_image",
+                "minRam": 0,
+                "minDiskSpace": 20,
+                "minCPU": null,
+                "diskFormat": "OPTIONAL.OF(QCOW2)",
+                "containerFormat": "OPTIONAL.OF(BARE)",
+                "created": 1446651675000,
+                "updated": 1446651695000,
+                "public": false
+              },
+              {
+                "id": "d59237b7-bca6-438d-836a-d627e281841c",
+                "version": 0,
+                "extId": "e9db182b-6ffc-4ef3-9f32-65fb305beb63",
+                "name": "image",
+                "minRam": 1024,
+                "minDiskSpace": 0,
+                "minCPU": null,
+                "diskFormat": "OPTIONAL.OF(QCOW2)",
+                "containerFormat": "OPTIONAL.OF(BARE)",
+                "created": 1447166331000,
+                "updated": 1447166331000,
+                "public": false
+              },
+              {
+                "id": "0f4a232a-e8dd-4f14-9b60-0d4990a1ea9e",
+                "version": 0,
+                "extId": "aeef6fbf-2c20-4c30-8177-fc2e6861ac52",
+                "name": "ems2",
+                "minRam": 0,
+                "minDiskSpace": 20,
+                "minCPU": null,
+                "diskFormat": "OPTIONAL.OF(QCOW2)",
+                "containerFormat": "OPTIONAL.OF(BARE)",
+                "created": 1446653872000,
+                "updated": 1446653890000,
+                "public": false
+              },
+              {
+                "id": "aed60774-9b94-4840-b93a-4afadbad47b6",
+                "version": 0,
+                "extId": "4d3c8af0-acb9-4135-8f39-ae833dc7653e",
+                "name": "ems1",
+                "minRam": 0,
+                "minDiskSpace": 20,
+                "minCPU": null,
+                "diskFormat": "OPTIONAL.OF(QCOW2)",
+                "containerFormat": "OPTIONAL.OF(BARE)",
+                "created": 1446652850000,
+                "updated": 1446652866000,
+                "public": false
+              },
+              {
+                "id": "55fcbff4-8eea-4f25-a926-3652ec12d80c",
+                "version": 0,
+                "extId": "a3d65977-c358-46d4-b013-1e107191c519",
+                "name": "ems",
+                "minRam": 0,
+                "minDiskSpace": 20,
+                "minCPU": null,
+                "diskFormat": "OPTIONAL.OF(QCOW2)",
+                "containerFormat": "OPTIONAL.OF(BARE)",
+                "created": 1446468833000,
+                "updated": 1446468846000,
+                "public": false
+              },
+              {
+                "id": "01110463-be80-4591-a941-19d72c994a34",
+                "version": 0,
+                "extId": "fcfa9ec3-eaad-4d43-ab25-4fed21146250",
+                "name": "5G_fuseco",
+                "minRam": 0,
+                "minDiskSpace": 0,
+                "minCPU": null,
+                "diskFormat": "OPTIONAL.OF(QCOW2)",
+                "containerFormat": "OPTIONAL.OF(BARE)",
+                "created": 1446644686000,
+                "updated": 1446644749000,
+                "public": false
+              },
+              {
+                "id": "bfe1beec-3a7a-42fd-98dc-f4bcca9de503",
+                "version": 0,
+                "extId": "89c28cb5-f2c9-4ed1-89cb-42c9ca511a96",
+                "name": "ubuntu-14.04-server-cloudimg-amd64-disk1",
+                "minRam": 0,
+                "minDiskSpace": 0,
+                "minCPU": null,
+                "diskFormat": "OPTIONAL.OF(QCOW2)",
+                "containerFormat": "OPTIONAL.OF(BARE)",
+                "created": 1445609608000,
+                "updated": 1445609609000,
+                "public": true
+              }
+            ],
+            "networks": [
+              {
+                "id": "d2609b69-ed4d-4bf8-9178-163556c252b3",
+                "version": 0,
+                "name": "net_a",
+                "extId": "75fd9864-9dc1-40d0-b83f-280f35d4e45d",
+                "external": false,
+                "shared": false,
+                "subnets": [
+                  {
+                    "id": "54a5ed15-51d5-4eea-a1ee-e13f153c6ab3",
+                    "version": 0,
+                    "name": "net_a_subnet",
+                    "extId": "1a1e5195-bc94-4cd6-a4ff-96894b1379b9",
+                    "networkId": "75fd9864-9dc1-40d0-b83f-280f35d4e45d",
+                    "cidr": "192.168.31.0/24",
+                    "gatewayIp": "192.168.31.1"
+                  }
+                ]
+              },
+              {
+                "id": "30c2d608-9222-4e8c-a82f-1326ca523529",
+                "version": 0,
+                "name": "internal_nubomedia",
+                "extId": "1e3415a2-d1a7-4e80-a63d-0d5da2324a25",
+                "external": false,
+                "shared": false,
+                "subnets": [
+                  {
+                    "id": "93465cf4-ee25-45b2-9b5e-5dee4ac2fb0e",
+                    "version": 0,
+                    "name": "internal_nubomedia_subnet",
+                    "extId": "3b114706-f8c0-48ec-8d51-dd621cca6417",
+                    "networkId": "1e3415a2-d1a7-4e80-a63d-0d5da2324a25",
+                    "cidr": "192.168.102.0/24",
+                    "gatewayIp": "192.168.102.1"
+                  }
+                ]
+              },
+              {
+                "id": "1d498703-c932-4bae-8a33-316f72272489",
+                "version": 0,
+                "name": "mgmt",
+                "extId": "e85c4d39-49c6-40aa-9c79-1f53abc79ab0",
+                "external": false,
+                "shared": false,
+                "subnets": [
+                  {
+                    "id": "c95c2906-e0b9-486d-a19f-19932b80ad77",
+                    "version": 0,
+                    "name": "mgmt_subnet",
+                    "extId": "2885db97-eeb3-47cb-a599-7c2cfef60f3d",
+                    "networkId": "e85c4d39-49c6-40aa-9c79-1f53abc79ab0",
+                    "cidr": "192.168.221.0/24",
+                    "gatewayIp": "192.168.221.1"
+                  }
+                ]
+              },
+              {
+                "id": "297bff56-b3b3-4a84-9739-b9fdd05cbb97",
+                "version": 0,
+                "name": "public",
+                "extId": "40522151-479a-404a-96b5-f6f4490bc2fe",
+                "external": true,
+                "shared": true,
+                "subnets": [
+                  {
+                    "id": "462eed0e-ee23-4355-8ddc-490738bdabe1",
+                    "version": 0,
+                    "name": "public-subnet",
+                    "extId": "f6c3b499-1fbe-475b-8d36-138a1fd82514",
+                    "networkId": "40522151-479a-404a-96b5-f6f4490bc2fe",
+                    "cidr": "192.168.145.0/24",
+                    "gatewayIp": "192.168.145.1"
+                  }
+                ]
+              },
+              {
+                "id": "172f192a-b234-43b2-8eb7-3aebaba4fc70",
+                "version": 0,
+                "name": "private",
+                "extId": "4746eff6-3cfa-4634-b529-f3510fd7d52e",
+                "external": false,
+                "shared": false,
+                "subnets": [
+                  {
+                    "id": "57e60171-82fd-4787-a781-28793e6cb954",
+                    "version": 0,
+                    "name": "private-subnet",
+                    "extId": "993e0d54-214f-41db-83e1-e2a6a782168d",
+                    "networkId": "4746eff6-3cfa-4634-b529-f3510fd7d52e",
+                    "cidr": "10.254.6.0/24",
+                    "gatewayIp": "10.254.6.1"
+                  }
+                ]
+              }
+            ]
+          },
+          "hostname": "iperf-server",
+          "vimInstanceName": "internal-docker"
+        }
+      ],
+      "vendor": "tbr",
+      "version": "0.1",
+      "virtual_link": [
+        {
+          "id": "9ed4fce9-ad0f-4681-9642-fa1501536106",
+          "hb_version": 3,
+          "extId": "4746eff6-3cfa-4634-b529-f3510fd7d52e",
+          "root_requirement": null,
+          "leaf_requirement": null,
+          "qos": [
+            "minimum_bandwith:SILVER"
+          ],
+          "test_access": [],
+          "connectivity_type": null,
+          "name": "private",
+          "connection_points_references": []
+        }
+      ],
+      "parent_ns_id": "b186db8a-ad3f-49df-85a8-3eb17ae0e6ee",
+      "descriptor_reference": "e338b9c1-1eaa-469b-b032-3ecf8d2dd798",
+      "vnfm_id": null,
+      "connected_external_virtual_link": [],
+      "vnf_address": [
+        "10.254.6.160"
+      ],
+      "status": "ACTIVE",
+      "notification": [],
+      "audit_log": null,
+      "runtime_policy_info": [],
+      "fault_management_policy": [],
+      "name": "iperf-server",
+      "type": "server",
+      "endpoint": "generic",
+      "vnfPackage": {
+        "id": "26728ca3-a9f6-4d49-a870-5c2ee8f133cb",
+        "version": 0,
+        "name": null,
+        "imageLink": null,
+        "scriptsLink": "https://github.com/charliemaiors/scripts-test.git",
+        "image": null,
+        "scripts": []
+      },
+      "task": "start",
+      "requires": {
+        "id": "ce0653c0-ac7a-4249-b466-fdbed11a3011",
+        "version": 0,
+        "configurationParameters": [],
+        "name": "requires"
+      },
+      "provides": {
+        "id": "d55e14cb-c95c-483a-87ec-a9f67c18d655",
+        "version": 0,
+        "configurationParameters": [],
+        "name": "provides"
+      }
+    }
+  ],
+  "vnf_dependency": [
+    {
+      "id": "1a5a0262-97b2-492d-8b4c-4fe07ba3853f",
+      "version": 6,
+      "target": "iperf-client",
+      "parameters": {
+        "server": {
+          "id": "d20b219b-874c-423d-94e6-29621c7fd7ef",
+          "version": 6,
+          "parameters": {
+            "private": ""
+          }
+        }
+      },
+      "vnfcParameters": {
+        "client": {
+          "vnfcId": null,
+          "id": "1fc62ac0-1e04-47df-b569-beb68f43c6f6",
+          "version": 0,
+          "parameters": {}
+        },
+        "server": {
+          "vnfcId": null,
+          "id": "bb93e3b2-e33c-4f13-b73c-52111758ddc2",
+          "version": 6,
+          "parameters": {
+            "31bc10a4-f8a2-42d9-9be2-ddf69b350293": {
+              "id": "8a23b271-2aac-4da4-87af-251e933af2cc",
+              "version": 6,
+              "parameters": {
+                "private_floatingIp": "192.168.145.36",
+                "hostname": "iperf-server-397",
+                "private": "10.254.6.160"
+              }
+            }
+          }
+        }
+      },
+      "idType": {
+        "iperf-server": "server"
+      }
+    }
+  ],
+  "lifecycle_event": [],
+  "vnffgr": [],
+  "pnfr": [],
+  "faultManagementPolicy": [],
+  "descriptor_reference": "ce81f6ff-45b4-4011-bd83-61d722eeb8af",
+  "resource_reservation": null,
+  "runtime_policy_info": null,
+  "status": "ACTIVE",
+  "notification": null,
+  "lifecycle_event_history": [],
+  "audit_log": null,
+  "name": "iperf-NS"
+}
