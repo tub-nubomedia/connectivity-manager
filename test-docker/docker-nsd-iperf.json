@@ -44,7 +44,7 @@
         {
           "event":"INSTANTIATE",
           "lifecycle_events":[
-            "install.sh",
+            "install-docker.sh",
             "install-srv.sh"
           ]
         }
@@ -54,9 +54,7 @@
           "flavour_key":"m1.small"
         }
       ],
-      "vnfPackage":{
-        "scriptsLink":"https://github.com/charliemaiors/scripts-test.git"
-      }
+      "vnfPackageLocation":"https://github.com/charliemaiors/scripts-test.git"
     },
     {
       "vendor":"tbr",
@@ -101,13 +99,13 @@
         {
           "event":"INSTANTIATE",
           "lifecycle_events":[
-            "install.sh"
+            "install-docker.sh"
           ]
         },
         {
           "event":"CONFIGURE",
           "lifecycle_events":[
-            "server_configure.sh"
+            "server-config-docker.sh"
           ]
         }
       ],
@@ -116,9 +114,7 @@
           "flavour_key":"m1.small"
         }
       ],
-      "vnfPackage":{
-        "scriptsLink":"https://github.com/charliemaiors/scripts-test.git"
-      }
+      "vnfPackageLocation":"https://github.com/charliemaiors/scripts-test.git"
     }
   ],
   "vnffgd":[
