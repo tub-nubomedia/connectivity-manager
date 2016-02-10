@@ -38,6 +38,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -84,7 +85,7 @@ public class OpenbatonEventSubscription {
     }
 
     public void receiveNewNsr(String message) {
-        logger.info("received new event " + message);
+        logger.debug("received new event " + message);
         OpenbatonEvent evt;
 
         try {
@@ -97,6 +98,8 @@ public class OpenbatonEventSubscription {
                 logger.warn("Error in payload, expected NSR " + e.getMessage());
             return;
         }
+
+        logger.info("[OPENBATON-EVENT-SUBSCRIPTION] received new NSR " + evt.getPayload().getId() + "for slice allocation at time " + new Date().getTime());
 
         logger.debug("Deserialized!!!");
         logger.debug("ACTION: " + evt.getAction() + " PAYLOAD: " + evt.getPayload().toString());
@@ -113,6 +116,7 @@ public class OpenbatonEventSubscription {
                         logger.debug("QoS Attribute: " + qosAttr);
                         if (qosAttr.contains("minimum_bandwith")) {
                             logger.debug("FOUND QOS ATTR WITH QOS: " + qosAttr);
+                            logger.info("[OPENBATON-EVENT-SUBSCRIPTION] sending the NSR " + evt.getPayload().getId() + "for slice allocation to nsr handler at time " + new Date().getTime());
                             creator.addQos(nsr.getVnfr(), nsr.getId());
                             break vnfrloop;
                         }
@@ -124,7 +128,7 @@ public class OpenbatonEventSubscription {
 
     public void deleteNsr(String message){
 
-        logger.info("received new event " + message);
+        logger.debug("received new event " + message);
         OpenbatonEvent evt;
 
         try {
@@ -138,6 +142,8 @@ public class OpenbatonEventSubscription {
             return;
         }
 
+
+        logger.info("[OPENBATON-EVENT-SUBSCRIPTION] received new NSR " + evt.getPayload().getId() + "for slice removal at time " + new Date().getTime());
         logger.debug("Deserialized!!!");
         logger.debug("ACTION: " + evt.getAction() + " PAYLOAD " + evt.getPayload().toString());
         NetworkServiceRecord nsr = evt.getPayload();
@@ -151,6 +157,7 @@ public class OpenbatonEventSubscription {
                     for (String qosAttr : vlr.getQos()) {
                         if (qosAttr.contains("minimum_bandwith")) {
                             logger.debug("FOUND QOS ATTR WITH QOS: " + qosAttr);
+                            logger.info("[OPENBATON-EVENT-SUBSCRIPTION] sending the NSR " + evt.getPayload().getId() + "for slice removal to nsr handler at time " + new Date().getTime());
                             creator.removeQos(nsr.getVnfr(), nsr.getId());
                             break vnfrloop;
                         }

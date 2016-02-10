@@ -47,10 +47,12 @@ public class RemoveQoSExecutor implements Runnable{
 
     @Override
     public void run() {
+        logger.info("[REMOVE-QOS-EXECUTOR] deleting slice for " + nsrID + " at time " + new Date().getTime());
         List<String> servers = this.getServersWithQoS(vnfrs);
         logger.debug("remmoving qos for nsr " + nsrID + " with vnfrs: " + vnfrs);
         boolean response = connectivityManagerHandler.removeQoS(servers,nsrID);
         logger.debug("Response from handler " + response);
+        logger.info("[REMOVE-QOS-EXECUTOR] ended slice removal for " + nsrID + " at time " + new Date().getTime());
     }
 
     private  List<String> getServersWithQoS(Set<VirtualNetworkFunctionRecord> vnfrs){

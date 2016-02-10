@@ -52,6 +52,7 @@ public class AddQoSExecutor implements Runnable{
     @Override
     public void run() {
 
+        logger.info("[ADD-QOS-EXECUTOR] allocating slice for " + nsrID + " at time " + new Date().getTime());
         logger.debug("Received vnfrs with qos");
 
         FlowAllocation flows = this.getSFlows(vnfrs);
@@ -61,6 +62,7 @@ public class AddQoSExecutor implements Runnable{
 
         boolean response = connectivityManagerHandler.addQoS(qoses,flows,nsrID);
         logger.debug("RESPONSE from Handler " + response);
+        logger.info("[ADD-QOS-EXECUTOR] ended slice allocation for " + nsrID + " at time " + new Date().getTime());
 
     }
 

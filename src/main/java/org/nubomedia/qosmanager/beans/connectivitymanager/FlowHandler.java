@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -48,7 +49,8 @@ public class FlowHandler {
 
     }
 
-    public void createFlows(Host host, List<Server> servers, FlowAllocation allocations){
+    public void createFlows(Host host, List<Server> servers, FlowAllocation allocations, String nsrId){
+        logger.info("[FLOW-HANDLER] CREATING flows for " + nsrId + " at time " + new Date().getTime());
         logger.debug("Received Flow allocation " + allocations.toString());
         List<FlowServer> flows = new ArrayList<>();
         for (String vlr : allocations.getAllVlr()){
@@ -83,9 +85,12 @@ public class FlowHandler {
         logger.debug("REQUEST is " + request.toString());
         RequestFlows returningFlows = requestor.setFlow(request);
         logger.debug("Returning flows " + returningFlows.toString());
+        logger.info("[FLOW-HANDLER] CREATED queues for " + nsrId + " at time " + new Date().getTime());
     }
 
-    public void removeFlows(Host hostmap, List<String> serversIds, List<Server> servers){
+    public void removeFlows(Host hostmap, List<String> serversIds, List<Server> servers, String nsrId){
+
+        logger.info("[FLOW-HANDLER] REMOVING queues for " + nsrId + " at time " + new Date().getTime());
 
         for(Server server : servers){
             if (serversIds.contains(server.getName())){
@@ -95,6 +100,7 @@ public class FlowHandler {
                 }
             }
         }
+        logger.info("[FLOW-HANDLER] REMOVED queues for " + nsrId + " at time " + new Date().getTime());
     }
 
     private Server getServerRefFromIp (List<Server> servers, String ip){

@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,14 +54,15 @@ public class ConnectivityManagerHandler {
 
 
     public boolean addQoS(List<QoSAllocation> queues, FlowAllocation flows, String nsrId){
+        logger.info("[CONNECTIVITY-MANAGER-HANDLER] allocating slice for " + nsrId + " at time " + new Date().getTime());
         logger.debug("Start creating QOS for " + nsrId + " with queues " + queues.toString() + " and flows " + flows.toString());
         this.updateHost();
-        List<Server> servers = queueHandler.createQueues(hostMap, queues);
+        List<Server> servers = queueHandler.createQueues(hostMap, queues,nsrId);
         internalData.put(nsrId,servers);
         logger.debug("MAP VALUE IS " + nsrId + " -> " + servers.toString());
 
-        flowsHandler.createFlows(hostMap,servers,flows);
-
+        flowsHandler.createFlows(hostMap,servers,flows,nsrId);
+        logger.info("[CONNECTIVITY-MANAGER-HANDLER] allocated slice for " + nsrId + " at time " + new Date().getTime());
         return true;
     }
 
@@ -71,7 +73,7 @@ public class ConnectivityManagerHandler {
     public boolean removeQoS(List<String> servers,String nsrID){
 
         List<Server> serversList;
-
+        logger.info("[CONNECTIVITY-MANAGER-HANDLER] removing slice for " + nsrID + " at time " + new Date().getTime());
         try {
             serversList = internalData.get(nsrID);
             logger.info("SERVER LIST FOR DELETING IS " + serversList.toString());
@@ -81,9 +83,10 @@ public class ConnectivityManagerHandler {
             return false;
         }
 
-        queueHandler.removeQos(hostMap,serversList,servers);
-        flowsHandler.removeFlows(hostMap,servers,internalData.get(nsrID));
+        queueHandler.removeQos(hostMap,serversList,servers,nsrID);
+        flowsHandler.removeFlows(hostMap,servers,internalData.get(nsrID),nsrID);
         internalData.remove(nsrID);
+        logger.info("[CONNECTIVITY-MANAGER-HANDLER] removed slice for " + nsrID + " at time " + new Date().getTime());
         return true;
     }
 

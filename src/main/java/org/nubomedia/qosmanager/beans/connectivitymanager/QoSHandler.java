@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -43,8 +44,9 @@ public class QoSHandler {
         this.logger = LoggerFactory.getLogger(this.getClass());
     }
 
-    public List<Server> createQueues(Host hostMap, List<QoSAllocation> queues){
+    public List<Server> createQueues(Host hostMap, List<QoSAllocation> queues, String nsrId){
 
+        logger.info("[QOS-HANDLER] CREATING queues for " + nsrId + " at time " + new Date().getTime());
         logger.debug("received request for " + queues.toString());
 
         List<ServerQoS> queuesReq = new ArrayList<>();
@@ -67,7 +69,7 @@ public class QoSHandler {
         add = requestor.setQoS(add);
 
         servers = this.updateServers(servers, add);
-
+        logger.info("[QOS-HANDLER] CREATED queues for " + nsrId + " at time " + new Date().getTime());
         return servers;
     }
 
@@ -117,8 +119,9 @@ public class QoSHandler {
         return serverIface;
     }
 
-    public void removeQos(Host hostMap, List<Server> servers, List<String> serverIds){
+    public void removeQos(Host hostMap, List<Server> servers, List<String> serverIds, String nsrId){
 
+        logger.info("[QOS-HANDLER] REMOVING queues for " + nsrId + " at time " + new Date().getTime());
         for (Server server :servers){
             if (serverIds.contains(server.getName())){
                 String hypervisor = hostMap.belongsTo(server.getName());
@@ -128,6 +131,7 @@ public class QoSHandler {
                 }
             }
         }
+        logger.info("[QOS-HANDLER] REMOVED queues for " + nsrId + " at time " + new Date().getTime());
 
     }
 

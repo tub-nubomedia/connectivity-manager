@@ -52,16 +52,20 @@ public class QoSAllocator {
     }
 
     public void addQos(Set<VirtualNetworkFunctionRecord> vnfrs,String nsrId){
+        logger.info("[QOS-ALLOCATOR] received new set of vnfrs for " + nsrId + " to create a network slice at time " + new Date().getTime());
         logger.debug("Creating ADD Thread");
         AddQoSExecutor aqe = new AddQoSExecutor(handler,vnfrs,nsrId);
         qtScheduler.schedule(aqe,100, TimeUnit.MILLISECONDS);
+        logger.info("[QOS-ALLOCATOR] scheduled thread to handle the NSR" + nsrId + " to create a network slice at time " + new Date().getTime());
         logger.debug("ADD Thread created and scheduled");
     }
 
     public void removeQos(Set<VirtualNetworkFunctionRecord> vnfrs,String nsrId){
+        logger.info("[QOS-ALLOCATOR] received new set of vnfrs for " + nsrId + " to remove a network slice at time " + new Date().getTime());
         logger.debug("Creating REMOVE Thread");
         RemoveQoSExecutor rqe = new RemoveQoSExecutor(handler,vnfrs,nsrId);
         qtScheduler.schedule(rqe,10,TimeUnit.SECONDS);
+        logger.info("[QOS-ALLOCATOR] scheduled thread to handle the NSR" + nsrId + " to remove a network slice at time " + new Date().getTime());
         logger.debug("REMOVE Thread created and scheduled");
 
     }
