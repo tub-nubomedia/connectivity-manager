@@ -1,12 +1,12 @@
 {
-  "name":"iperf-NS",
-  "vendor":"tbr",
+  "name":"iperf-NS-gold",
+  "vendor":"fokus",
   "version":"0.1",
   "vnfd":[
     {
-      "vendor":"tbr",
+      "vendor":"fokus",
       "version":"0.1",
-      "name":"iperf-server",
+      "name":"iperf-server-gold",
       "type":"server",
       "endpoint":"generic",
       "configurations":{
@@ -36,7 +36,7 @@
         {
           "name":"private",
           "qos":[
-            "minimum_bandwith:SILVER"
+            "minimum_bandwith:GOLD"
           ]
         }
       ],
@@ -59,7 +59,7 @@
     {
       "vendor":"tbr",
       "version":"0.1",
-      "name":"iperf-client",
+      "name":"iperf-client-gold",
       "type":"client",
       "endpoint":"generic",
       "configurations":{
@@ -91,7 +91,7 @@
         {
           "name":"private",
           "qos":[
-            "minimum_bandwith:SILVER"
+            "minimum_bandwith:GOLD"
           ]
         }
       ],
@@ -128,10 +128,10 @@
   "vnf_dependency":[
     {
       "source":{
-        "name":"iperf-server"
+        "name":"iperf-server-gold"
       },
       "target":{
-        "name":"iperf-client"
+        "name":"iperf-client-gold"
       },
       "parameters":[
         "private"
