@@ -6,7 +6,7 @@
     {
       "vendor":"tbr",
       "version":"0.1",
-      "name":"iperf-server-gold",
+      "name":"iperf-server-silver",
       "type":"server",
       "endpoint":"generic",
       "configurations":{
@@ -18,7 +18,7 @@
           "vm_image":[
             "ubuntu-14.04-server-cloudimg-amd64-disk1"
           ],
-          "vimInstanceName":"vim-instance-30",
+          "vimInstanceName":"vim-instance",
           "scale_in_out":1,
           "vnfc":[
             {
@@ -36,7 +36,7 @@
         {
           "name":"private",
           "qos":[
-            "minimum_bandwith:GOLD"
+            "minimum_bandwith:SILVER"
           ]
         }
       ],
@@ -60,7 +60,7 @@
     {
       "vendor":"tbr",
       "version":"0.1",
-      "name":"iperf-client-gold",
+      "name":"iperf-client-silver",
       "type":"client",
       "endpoint":"generic",
       "configurations":{
@@ -74,7 +74,7 @@
           "vm_image":[
             "ubuntu-14.04-server-cloudimg-amd64-disk1"
           ],
-          "vimInstanceName":"vim-instance-30",
+          "vimInstanceName":"vim-instance",
           "scale_in_out":1,
           "vnfc":[
             {
@@ -92,7 +92,7 @@
         {
           "name":"private",
           "qos":[
-            "minimum_bandwith:GOLD"
+            "minimum_bandwith:SILVER"
           ]
         }
       ],
@@ -126,10 +126,10 @@
   "vnf_dependency":[
     {
       "source":{
-        "name":"iperf-server-gold"
+        "name":"iperf-server-silver"
       },
       "target":{
-        "name":"iperf-client-gold"
+        "name":"iperf-client-silver"
       },
       "parameters":[
         "private"
