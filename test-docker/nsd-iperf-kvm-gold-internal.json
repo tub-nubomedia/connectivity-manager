@@ -1,10 +1,10 @@
 {
   "name":"iperf-NS",
-  "vendor":"tbr",
+  "vendor":"fokus",
   "version":"0.1",
   "vnfd":[
     {
-      "vendor":"tbr",
+      "vendor":"fokus",
       "version":"0.1",
       "name":"iperf-server-gold",
       "type":"server",
@@ -57,60 +57,7 @@
       "vnfPackageLocation":"https://github.com/charliemaiors/scripts-test.git"
     },
     {
-      "vendor":"tbr",
-      "version":"0.1",
-      "name":"iperf-server-silver",
-      "type":"server",
-      "endpoint":"generic",
-      "configurations":{
-        "name":"config_name",
-        "configurationParameters":[]
-      },
-      "vdu":[
-        {
-          "vm_image":[
-            "ubuntu-14.04-server-cloudimg-amd64-disk1"
-          ],
-          "vimInstanceName":"internal-kvm",
-          "scale_in_out":1,
-          "vnfc":[
-            {
-              "connection_point":[
-                {
-                  "floatingIp":"random",
-                  "virtual_link_reference":"private"
-                }
-              ]
-            }
-          ]
-        }
-      ],
-      "virtual_link":[
-        {
-          "name":"private",
-          "qos":[
-            "minimum_bandwith:SILVER"
-          ]
-        }
-      ],
-      "lifecycle_event":[
-        {
-          "event":"INSTANTIATE",
-          "lifecycle_events":[
-            "install.sh",
-            "install-srv.sh"
-          ]
-        }
-      ],
-      "deployment_flavour":[
-        {
-          "flavour_key":"m1.small"
-        }
-      ],
-      "vnfPackageLocation":"https://github.com/charliemaiors/scripts-test.git"
-    },
-    {
-      "vendor":"tbr",
+      "vendor":"fokus",
       "version":"0.1",
       "name":"iperf-client-gold",
       "type":"client",
@@ -168,66 +115,6 @@
         }
       ],
       "vnfPackageLocation":"https://github.com/charliemaiors/scripts-test.git"
-    },
-    {
-      "vendor":"tbr",
-      "version":"0.1",
-      "name":"iperf-client-silver",
-      "type":"client",
-      "endpoint":"generic",
-      "configurations":{
-        "name":"config_name",
-        "configurationParameters":[
-
-        ]
-      },
-      "vdu":[
-        {
-          "vm_image":[
-            "ubuntu-14.04-server-cloudimg-amd64-disk1"
-          ],
-          "vimInstanceName":"internal-kvm",
-          "scale_in_out":1,
-          "vnfc":[
-            {
-              "connection_point":[
-                {
-                  "floatingIp":"random",
-                  "virtual_link_reference":"private"
-                }
-              ]
-            }
-          ]
-        }
-      ],
-      "virtual_link":[
-        {
-          "name":"private",
-          "qos":[
-            "minimum_bandwith:SILVER"
-          ]
-        }
-      ],
-      "lifecycle_event":[
-        {
-          "event":"INSTANTIATE",
-          "lifecycle_events":[
-            "install.sh"
-          ]
-        },
-        {
-          "event":"CONFIGURE",
-          "lifecycle_events":[
-            "server_configure.sh"
-          ]
-        }
-      ],
-      "deployment_flavour":[
-        {
-          "flavour_key":"m1.small"
-        }
-      ],
-      "vnfPackageLocation":"https://github.com/charliemaiors/scripts-test.git"
     }
   ],
   "vnffgd":[
@@ -245,17 +132,6 @@
       },
       "target":{
         "name":"iperf-client-gold"
-      },
-      "parameters":[
-        "private"
-      ]
-    },
-    {
-      "source":{
-        "name":"iperf-server-silver"
-      },
-      "target":{
-        "name":"iperf-client-silver"
       },
       "parameters":[
         "private"

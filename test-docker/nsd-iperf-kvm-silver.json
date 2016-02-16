@@ -1,10 +1,10 @@
 {
   "name":"iperf-NS",
-  "vendor":"tbr",
+  "vendor":"fokus",
   "version":"0.1",
   "vnfd":[
     {
-      "vendor":"tbr",
+      "vendor":"fokus",
       "version":"0.1",
       "name":"iperf-server-silver",
       "type":"server",
@@ -18,7 +18,7 @@
           "vm_image":[
             "ubuntu-14.04-server-cloudimg-amd64-disk1"
           ],
-          "vimInstanceName":"vim-instance",
+          "vimInstanceName":"internal-kvm",
           "scale_in_out":1,
           "vnfc":[
             {
@@ -56,9 +56,8 @@
       ],
       "vnfPackageLocation":"https://github.com/charliemaiors/scripts-test.git"
     },
-
     {
-      "vendor":"tbr",
+      "vendor":"fokus",
       "version":"0.1",
       "name":"iperf-client-silver",
       "type":"client",
@@ -74,7 +73,7 @@
           "vm_image":[
             "ubuntu-14.04-server-cloudimg-amd64-disk1"
           ],
-          "vimInstanceName":"vim-instance",
+          "vimInstanceName":"internal-kvm",
           "scale_in_out":1,
           "vnfc":[
             {
@@ -117,6 +116,9 @@
       ],
       "vnfPackageLocation":"https://github.com/charliemaiors/scripts-test.git"
     }
+  ],
+  "vnffgd":[
+
   ],
   "vld":[
     {
