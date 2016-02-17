@@ -16,7 +16,7 @@
       "vdu":[
         {
           "vm_image":[
-            "openbaton/ems-final"
+            "openbaton/ems-fixed"
           ],
           "vimInstanceName":"internal-docker",
           "scale_in_out":1,
@@ -71,7 +71,7 @@
       "vdu":[
         {
           "vm_image":[
-            "openbaton/ems-final"
+            "openbaton/ems-fixed"
           ],
           "vimInstanceName":"internal-docker",
           "scale_in_out":1,
