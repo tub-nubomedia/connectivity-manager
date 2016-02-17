@@ -1,12 +1,12 @@
 {
   "name":"iperf-NS",
-  "vendor":"tbr",
+  "vendor":"fokus",
   "version":"0.1",
   "vnfd":[
     {
-      "vendor":"tbr",
+      "vendor":"fokus",
       "version":"0.1",
-      "name":"iperf-server-be",
+      "name":"iperf-server",
       "type":"server",
       "endpoint":"generic",
       "configurations":{
@@ -18,7 +18,7 @@
           "vm_image":[
             "ubuntu-14.04-server-cloudimg-amd64-disk1"
           ],
-          "vimInstanceName":"vim-instance",
+          "vimInstanceName":"internal-kvm",
           "scale_in_out":1,
           "vnfc":[
             {
@@ -34,7 +34,10 @@
       ],
       "virtual_link":[
         {
-          "name":"private"
+          "name":"private",
+          "qos":[
+            "minimum_bandwith:SILVER"
+          ]
         }
       ],
       "lifecycle_event":[
@@ -53,11 +56,10 @@
       ],
       "vnfPackageLocation":"https://github.com/charliemaiors/scripts-test.git"
     },
-
     {
-      "vendor":"tbr",
+      "vendor":"fokus",
       "version":"0.1",
-      "name":"iperf-client-be",
+      "name":"iperf-client",
       "type":"client",
       "endpoint":"generic",
       "configurations":{
@@ -71,7 +73,7 @@
           "vm_image":[
             "ubuntu-14.04-server-cloudimg-amd64-disk1"
           ],
-          "vimInstanceName":"vim-instance",
+          "vimInstanceName":"internal-kvm",
           "scale_in_out":1,
           "vnfc":[
             {
@@ -112,6 +114,9 @@
       "vnfPackageLocation":"https://github.com/charliemaiors/scripts-test.git"
     }
   ],
+  "vnffgd":[
+
+  ],
   "vld":[
     {
       "name":"private"
@@ -120,10 +125,10 @@
   "vnf_dependency":[
     {
       "source":{
-        "name":"iperf-server-be"
+        "name":"iperf-server"
       },
       "target":{
-        "name":"iperf-client-be"
+        "name":"iperf-client"
       },
       "parameters":[
         "private"

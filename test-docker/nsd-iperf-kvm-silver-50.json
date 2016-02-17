@@ -1,12 +1,12 @@
 {
   "name":"iperf-NS",
-  "vendor":"tbr",
+  "vendor":"fokus",
   "version":"0.1",
   "vnfd":[
     {
-      "vendor":"tbr",
+      "vendor":"fokus",
       "version":"0.1",
-      "name":"iperf-server-be",
+      "name":"iperf-server-silver",
       "type":"server",
       "endpoint":"generic",
       "configurations":{
@@ -34,7 +34,10 @@
       ],
       "virtual_link":[
         {
-          "name":"private"
+          "name":"private",
+          "qos":[
+            "minimum_bandwith:SILVER"
+          ]
         }
       ],
       "lifecycle_event":[
@@ -53,11 +56,10 @@
       ],
       "vnfPackageLocation":"https://github.com/charliemaiors/scripts-test.git"
     },
-
     {
-      "vendor":"tbr",
+      "vendor":"fokus",
       "version":"0.1",
-      "name":"iperf-client-be",
+      "name":"iperf-client-silver",
       "type":"client",
       "endpoint":"generic",
       "configurations":{
@@ -87,7 +89,10 @@
       ],
       "virtual_link":[
         {
-          "name":"private"
+          "name":"private",
+          "qos":[
+            "minimum_bandwith:SILVER"
+          ]
         }
       ],
       "lifecycle_event":[
@@ -100,7 +105,7 @@
         {
           "event":"CONFIGURE",
           "lifecycle_events":[
-            "server_configure-be.sh"
+            "server_configure.sh"
           ]
         }
       ],
@@ -112,6 +117,9 @@
       "vnfPackageLocation":"https://github.com/charliemaiors/scripts-test.git"
     }
   ],
+  "vnffgd":[
+
+  ],
   "vld":[
     {
       "name":"private"
@@ -120,10 +128,10 @@
   "vnf_dependency":[
     {
       "source":{
-        "name":"iperf-server-be"
+        "name":"iperf-server-silver"
       },
       "target":{
-        "name":"iperf-client-be"
+        "name":"iperf-client-silver"
       },
       "parameters":[
         "private"
