@@ -20,6 +20,7 @@ import org.nubomedia.qosmanager.openbaton.FlowAllocation;
 import org.nubomedia.qosmanager.openbaton.FlowReference;
 import org.nubomedia.qosmanager.openbaton.QoSAllocation;
 import org.nubomedia.qosmanager.openbaton.QoSReference;
+import org.nubomedia.qosmanager.openbaton.VldQuality;
 import org.nubomedia.qosmanager.values.Quality;
 import org.openbaton.catalogue.mano.common.Ip;
 import org.openbaton.catalogue.mano.descriptor.InternalVirtualLink;
@@ -68,27 +69,29 @@ public class AddQoSExecutor implements Runnable{
 
     private List<QoSAllocation> getQoses(Set<VirtualNetworkFunctionRecord> vnfrs) {
 
-        Map<String, Quality> qualities = this.getVlrs(vnfrs);
+        List<VldQuality> qualities = this.getVlrs(vnfrs);
         List<QoSAllocation> res = new ArrayList<>();
 
         for(VirtualNetworkFunctionRecord vnfr : vnfrs){
             for(VirtualDeploymentUnit vdu : vnfr.getVdu()){
                 for(VNFCInstance vnfci : vdu.getVnfc_instance()){
-                    if(this.hasQoS(qualities,vnfci.getConnection_point())){
+                    if(this.hasQoS(qualities,vnfci.getConnection_point(),vnfr.getId())){
                         QoSAllocation tmp = new QoSAllocation();
                         tmp.setServerName(vnfci.getHostname());
                         List<QoSReference> ifaces = new ArrayList<>();
                         for(VNFDConnectionPoint cp : vnfci.getConnection_point()){
-                            if(qualities.keySet().contains(cp.getVirtual_link_reference())){
-                                QoSReference ref = new QoSReference();
-                                ref.setQuality(qualities.get(cp.getVirtual_link_reference()));
-                                for(Ip ip : vnfci.getIps()){
-                                    if(ip.getNetName().equals(cp.getVirtual_link_reference())){
-                                        ref.setIp(ip.getIp());
+                            for (VldQuality quality : qualities) {
+                                if (quality.getVlid().equals(cp.getVirtual_link_reference()) && quality.getVnfrId().equals(vnfr.getId())) {
+                                    QoSReference ref = new QoSReference();
+                                    ref.setQuality(quality.getQuality());
+                                    for (Ip ip : vnfci.getIps()) {
+                                        if (ip.getNetName().equals(cp.getVirtual_link_reference())) {
+                                            ref.setIp(ip.getIp());
+                                        }
                                     }
+                                    logger.debug("GET QOSES: adding reference to list " + ref.toString());
+                                    ifaces.add(ref);
                                 }
-                                logger.debug("GET QOSES: adding reference to list " + ref.toString());
-                                ifaces.add(ref);
                             }
                         }
                         logger.debug("IFACES " + ifaces);
@@ -103,38 +106,43 @@ public class AddQoSExecutor implements Runnable{
         return res;
     }
 
-    private boolean hasQoS(Map<String,Quality> qualities, Set<VNFDConnectionPoint> ifaces){
+    private boolean hasQoS(List<VldQuality> qualities, Set<VNFDConnectionPoint> ifaces, String vnfrId){
 
         for(VNFDConnectionPoint cp : ifaces){
-            if(qualities.keySet().contains(cp.getVirtual_link_reference()))
-                return true;
+            for (VldQuality vldQuality : qualities) {
+                if(vnfrId.equals(vldQuality.getVnfrId()) && cp.getVirtual_link_reference().equals(vldQuality.getVlid()))
+                    return true;
+            }
         }
         return false;
     }
 
     private FlowAllocation getSFlows(Set<VirtualNetworkFunctionRecord> vnfrs){
 
-        Map<String, Quality> qualities = this.getVlrs(vnfrs);
+        List<VldQuality> qualities = this.getVlrs(vnfrs);
         FlowAllocation res = new FlowAllocation();
 
-        for(String vlr : qualities.keySet()){
-            List<FlowReference> references = this.findCprFromVirtualLink(vnfrs,vlr);
-            res.addVirtualLink(vlr,references);
+        for(VldQuality quality : qualities){
+            List<FlowReference> references = this.findCprFromVirtualLink(vnfrs,quality.getVlid());
+            res.addVirtualLink(quality.getVlid(),references);
         }
 
         return res;
 
     }
 
-    private Map<String,Quality> getVlrs(Set<VirtualNetworkFunctionRecord> vnfrs) {
-        Map<String,Quality> res = new LinkedHashMap<>();
+    private List<VldQuality> getVlrs(Set<VirtualNetworkFunctionRecord> vnfrs) {
+        List<VldQuality> res = new ArrayList<>();
         logger.debug("GETTING VLRS");
         for (VirtualNetworkFunctionRecord vnfr : vnfrs){
             for (InternalVirtualLink vlr : vnfr.getVirtual_link()){
                 for(String qosParam: vlr.getQos()) {
                     if (qosParam.contains("minimum_bandwith")){
                         Quality quality = this.mapValueQuality(qosParam);
-                        res.put(vlr.getName(),quality);
+                        logger.info("VLDQUALITY: VNFR ID " + vnfr.getId() + " VLR " + vlr.getName() + " QUALITY " + quality);
+                        VldQuality vldQuality = new VldQuality(vnfr.getId(),vlr.getName(),quality);
+
+                        res.add(vldQuality);
                         logger.debug("GET VIRTUAL LINK RECORD: insert in map vlr name " + vlr.getName() + " with quality " + quality);
                     }
                 }

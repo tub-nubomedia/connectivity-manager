@@ -16,6 +16,7 @@
 package org.nubomedia.qosmanager.beans.openbaton;
 
 import org.nubomedia.qosmanager.beans.connectivitymanager.ConnectivityManagerHandler;
+import org.nubomedia.qosmanager.openbaton.VldQuality;
 import org.nubomedia.qosmanager.values.Quality;
 import org.openbaton.catalogue.mano.descriptor.InternalVirtualLink;
 import org.openbaton.catalogue.mano.descriptor.VNFDConnectionPoint;
@@ -58,15 +59,17 @@ public class RemoveQoSExecutor implements Runnable{
     private  List<String> getServersWithQoS(Set<VirtualNetworkFunctionRecord> vnfrs){
         List<String> res = new ArrayList<>();
 
-        Map<String, Quality> qualities = this.getVlrs(vnfrs);
+        List<VldQuality> qualities = this.getVlrs(vnfrs);
 
         for (VirtualNetworkFunctionRecord vnfr : vnfrs){
             for (VirtualDeploymentUnit vdu : vnfr.getVdu()){
                 for (VNFCInstance vnfcInstance : vdu.getVnfc_instance()){
                     for (VNFDConnectionPoint connectionPoint : vnfcInstance.getConnection_point()){
-                        if (qualities.keySet().contains(connectionPoint.getVirtual_link_reference())){
-                            logger.debug("GETSERVERWITHQOS");
-                            res.add(vnfcInstance.getHostname());
+                        for (VldQuality quality : qualities) {
+                            if (quality.getVnfrId().equals(vnfr.getId()) && quality.getVlid().equals(connectionPoint.getVirtual_link_reference())) {
+                                logger.debug("GETSERVERWITHQOS");
+                                res.add(vnfcInstance.getHostname());
+                            }
                         }
                     }
                 }
@@ -76,15 +79,16 @@ public class RemoveQoSExecutor implements Runnable{
         return res;
     }
 
-    private Map<String,Quality> getVlrs(Set<VirtualNetworkFunctionRecord> vnfrs) {
-        Map<String,Quality> res = new LinkedHashMap<>();
+    private List<VldQuality> getVlrs(Set<VirtualNetworkFunctionRecord> vnfrs) {
+        List<VldQuality> res = new ArrayList<>();
         logger.debug("GETTING VLRS");
         for (VirtualNetworkFunctionRecord vnfr : vnfrs){
             for (InternalVirtualLink vlr : vnfr.getVirtual_link()){
                 for(String qosParam: vlr.getQos()) {
                     if (qosParam.contains("minimum_bandwith")){
                         Quality quality = this.mapValueQuality(qosParam);
-                        res.put(vlr.getName(),quality);
+                        VldQuality vldQuality = new VldQuality(vnfr.getId(),vlr.getName(),quality);
+                        res.add(vldQuality);
                         logger.debug("GET VIRTUAL LINK RECORD: insert in map vlr name " + vlr.getName() + " with quality " + quality);
                     }
                 }
