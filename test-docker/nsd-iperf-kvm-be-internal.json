@@ -34,10 +34,7 @@
       ],
       "virtual_link":[
         {
-          "name":"private",
-          "qos":[
-            "minimum_bandwith:SILVER"
-          ]
+          "name":"private"
         }
       ],
       "lifecycle_event":[
