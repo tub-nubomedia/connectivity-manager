@@ -17,6 +17,7 @@ package org.nubomedia.qosmanager.beans.openbaton;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
+import org.nubomedia.qosmanager.beans.connectivitymanager.ConnectivityManagerHandler;
 import org.nubomedia.qosmanager.configurations.NfvoConfiguration;
 import org.nubomedia.qosmanager.openbaton.OpenbatonEvent;
 import org.nubomedia.qosmanager.utils.ConfigReader;
@@ -41,6 +42,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by maa on 11.11.15.
@@ -55,6 +59,8 @@ public class OpenbatonEventSubscription {
     private QoSAllocator creator;
     @Autowired
     private Gson mapper;
+    @Autowired private ConnectivityManagerHandler handler;
+    private final ScheduledExecutorService qtScheduler = Executors.newScheduledThreadPool(1);
     private List<String> eventIds;
 
 
@@ -117,7 +123,9 @@ public class OpenbatonEventSubscription {
                         if (qosAttr.contains("minimum_bandwith")) {
                             logger.debug("FOUND QOS ATTR WITH QOS: " + qosAttr);
                             logger.info("[OPENBATON-EVENT-SUBSCRIPTION] sending the NSR " + evt.getPayload().getId() + "for slice allocation to nsr handler at time " + new Date().getTime());
-                            creator.addQos(nsr.getVnfr(), nsr.getId());
+//                            creator.addQos(nsr.getVnfr(), nsr.getId());
+                            AddQoSExecutor aqe = new AddQoSExecutor(handler,nsr.getVnfr(),nsr.getId());
+                            qtScheduler.schedule(aqe,100, TimeUnit.MILLISECONDS);
                             break vnfrloop;
                         }
                     }
@@ -159,7 +167,9 @@ public class OpenbatonEventSubscription {
                         if (qosAttr.contains("minimum_bandwith")) {
                             logger.debug("FOUND QOS ATTR WITH QOS: " + qosAttr);
                             logger.info("[OPENBATON-EVENT-SUBSCRIPTION] sending the NSR " + evt.getPayload().getId() + "for slice removal to nsr handler at time " + new Date().getTime());
-                            creator.removeQos(nsr.getVnfr(), nsr.getId());
+//                            creator.removeQos(nsr.getVnfr(), nsr.getId());
+                            RemoveQoSExecutor rqe = new RemoveQoSExecutor(handler,nsr.getVnfr(),nsr.getId());
+                            qtScheduler.schedule(rqe,10,TimeUnit.SECONDS);
                             break vnfrloop;
                         }
                     }
