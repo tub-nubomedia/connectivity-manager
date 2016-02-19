@@ -124,6 +124,7 @@ public class OpenbatonEventSubscription {
                 }
             }
         }
+        logger.info("[OPENBATON-EVENT-SUBSCRIPTION] Ended message callback function at " + new Date().getTime());
     }
 
     public void deleteNsr(String message){
