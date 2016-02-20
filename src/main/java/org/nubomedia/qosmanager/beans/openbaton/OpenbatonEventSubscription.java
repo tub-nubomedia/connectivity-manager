@@ -59,8 +59,6 @@ public class OpenbatonEventSubscription {
     private QoSAllocator creator;
     @Autowired
     private Gson mapper;
-    @Autowired private ConnectivityManagerHandler handler;
-    private final ScheduledExecutorService qtScheduler = Executors.newScheduledThreadPool(1);
     private List<String> eventIds;
 
 
@@ -68,7 +66,14 @@ public class OpenbatonEventSubscription {
     private void init() throws SDKException, IOException {
 
         this.logger = LoggerFactory.getLogger(this.getClass());
-        this.requestor = new NFVORequestor(configuration.getUsername(), configuration.getPassword(), configuration.getBaseURL(), configuration.getBasePort(), "1");
+
+        if (configuration.isSecurity()){
+            this.requestor = new NFVORequestor(configuration.getUsername(), configuration.getPassword(), configuration.getBaseURL(), configuration.getBasePort(), "1");
+        }
+        else{
+            this.requestor = new NFVORequestor("","",configuration.getBaseURL(),configuration.getBasePort(),"1");
+        }
+
         this.eventIds = new ArrayList<>();
 
         EventEndpoint eventEndpointCreation = new EventEndpoint();
@@ -123,9 +128,7 @@ public class OpenbatonEventSubscription {
                         if (qosAttr.contains("minimum_bandwith")) {
                             logger.debug("FOUND QOS ATTR WITH QOS: " + qosAttr);
                             logger.info("[OPENBATON-EVENT-SUBSCRIPTION] sending the NSR " + evt.getPayload().getId() + "for slice allocation to nsr handler at time " + new Date().getTime());
-//                            creator.addQos(nsr.getVnfr(), nsr.getId());
-                            AddQoSExecutor aqe = new AddQoSExecutor(handler,nsr.getVnfr(),nsr.getId());
-                            qtScheduler.schedule(aqe,100, TimeUnit.MILLISECONDS);
+                            creator.addQos(nsr.getVnfr(), nsr.getId());
                             break vnfrloop;
                         }
                     }
@@ -167,9 +170,7 @@ public class OpenbatonEventSubscription {
                         if (qosAttr.contains("minimum_bandwith")) {
                             logger.debug("FOUND QOS ATTR WITH QOS: " + qosAttr);
                             logger.info("[OPENBATON-EVENT-SUBSCRIPTION] sending the NSR " + evt.getPayload().getId() + "for slice removal to nsr handler at time " + new Date().getTime());
-//                            creator.removeQos(nsr.getVnfr(), nsr.getId());
-                            RemoveQoSExecutor rqe = new RemoveQoSExecutor(handler,nsr.getVnfr(),nsr.getId());
-                            qtScheduler.schedule(rqe,10,TimeUnit.SECONDS);
+                            creator.removeQos(nsr.getVnfr(), nsr.getId());
                             break vnfrloop;
                         }
                     }

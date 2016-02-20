@@ -33,6 +33,7 @@ public class NfvoConfiguration {
     private String basePort;
     private String username;
     private String password;
+    private boolean security;
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public String getBaseURL() {
@@ -65,6 +66,14 @@ public class NfvoConfiguration {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean isSecurity() {
+        return security;
+    }
+
+    public void setSecurity(boolean security) {
+        this.security = security;
     }
 
     @PostConstruct
