@@ -22,6 +22,7 @@ import org.nubomedia.qosmanager.openbaton.FlowReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -33,6 +34,7 @@ import java.util.List;
  * Created by maa on 09.12.15.
  */
 @Service
+@Scope ("prototype")
 public class FlowHandler {
 
     @Autowired private ConnectivityManagerRequestor requestor;
@@ -67,6 +69,7 @@ public class FlowHandler {
                                 Flow tmp = new Flow();
                                 tmp.setDest_ipv4(ip);
                                 Server dest = this.getServerRefFromIp(servers,ip);
+                                tmp.setDest_hyp(host.belongsTo(dest.getName()));
                                 tmp.setOvs_port_number(dest.getFromIp(ip).getOvs_port_number());
                                 tmp.setPriority(priority);
                                 tmp.setProtocol(protocol);

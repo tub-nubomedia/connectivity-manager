@@ -24,6 +24,7 @@ import org.nubomedia.qosmanager.openbaton.QoSAllocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -36,6 +37,7 @@ import java.util.Map;
  * Created by maa on 03.12.15.
  */
 @Service
+@Scope ("prototype")
 public class ConnectivityManagerHandler {
 
     @Autowired private QoSHandler queueHandler;
