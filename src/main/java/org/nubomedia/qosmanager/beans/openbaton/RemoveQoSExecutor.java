@@ -16,6 +16,7 @@
 package org.nubomedia.qosmanager.beans.openbaton;
 
 import org.nubomedia.qosmanager.beans.connectivitymanager.ConnectivityManagerHandler;
+import org.nubomedia.qosmanager.interfaces.QoSInterface;
 import org.nubomedia.qosmanager.openbaton.VldQuality;
 import org.nubomedia.qosmanager.values.Quality;
 import org.openbaton.catalogue.mano.descriptor.InternalVirtualLink;
@@ -33,12 +34,12 @@ import java.util.*;
  */
 public class RemoveQoSExecutor implements Runnable{
 
-    private ConnectivityManagerHandler connectivityManagerHandler;
+    private QoSInterface connectivityManagerHandler;
     private Logger logger;
     private Set<VirtualNetworkFunctionRecord> vnfrs;
     private String nsrID;
 
-    public RemoveQoSExecutor(ConnectivityManagerHandler connectivityManagerHandler, Set<VirtualNetworkFunctionRecord> vnfrs, String nsrID) {
+    public RemoveQoSExecutor(QoSInterface connectivityManagerHandler, Set<VirtualNetworkFunctionRecord> vnfrs, String nsrID) {
         this.connectivityManagerHandler = connectivityManagerHandler;
         this.vnfrs = vnfrs;
         this.nsrID = nsrID;

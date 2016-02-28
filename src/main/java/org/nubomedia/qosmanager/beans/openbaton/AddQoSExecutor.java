@@ -16,6 +16,8 @@
 package org.nubomedia.qosmanager.beans.openbaton;
 
 import org.nubomedia.qosmanager.beans.connectivitymanager.ConnectivityManagerHandler;
+import org.nubomedia.qosmanager.connectivitymanageragent.json.Qos;
+import org.nubomedia.qosmanager.interfaces.QoSInterface;
 import org.nubomedia.qosmanager.openbaton.FlowAllocation;
 import org.nubomedia.qosmanager.openbaton.FlowReference;
 import org.nubomedia.qosmanager.openbaton.QoSAllocation;
@@ -38,12 +40,12 @@ import java.util.*;
  */
 public class AddQoSExecutor implements Runnable{
 
-    private ConnectivityManagerHandler connectivityManagerHandler;
+    private QoSInterface connectivityManagerHandler;
     private Logger logger;
     private Set<VirtualNetworkFunctionRecord> vnfrs;
     private String nsrID;
 
-    public AddQoSExecutor(ConnectivityManagerHandler connectivityManagerHandler, Set<VirtualNetworkFunctionRecord> vnfrs, String nsrID) {
+    public AddQoSExecutor(QoSInterface connectivityManagerHandler, Set<VirtualNetworkFunctionRecord> vnfrs, String nsrID) {
         this.connectivityManagerHandler = connectivityManagerHandler;
         this.vnfrs = vnfrs;
         this.nsrID = nsrID;

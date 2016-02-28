@@ -20,7 +20,7 @@ package org.nubomedia.qosmanager.values;
  */
 public enum Quality {
 
-    GOLD ("100000000","50000000"),
+    GOLD ("100000","50000"),
     SILVER ("50000","25000"),
     BRONZE ("25000","12500");
 

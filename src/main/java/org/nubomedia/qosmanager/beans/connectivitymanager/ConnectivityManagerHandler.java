@@ -19,6 +19,7 @@ package org.nubomedia.qosmanager.beans.connectivitymanager;
 import org.nubomedia.qosmanager.connectivitymanageragent.beans.ConnectivityManagerRequestor;
 import org.nubomedia.qosmanager.connectivitymanageragent.json.Host;
 import org.nubomedia.qosmanager.connectivitymanageragent.json.Server;
+import org.nubomedia.qosmanager.interfaces.QoSInterface;
 import org.nubomedia.qosmanager.openbaton.FlowAllocation;
 import org.nubomedia.qosmanager.openbaton.QoSAllocation;
 import org.slf4j.Logger;
@@ -38,7 +39,7 @@ import java.util.Map;
  */
 @Service
 @Scope ("prototype")
-public class ConnectivityManagerHandler {
+public class ConnectivityManagerHandler implements QoSInterface{
 
     @Autowired private QoSHandler queueHandler;
     @Autowired private FlowHandler flowsHandler;
@@ -55,6 +56,7 @@ public class ConnectivityManagerHandler {
     }
 
 
+    @Override
     public boolean addQoS(List<QoSAllocation> queues, FlowAllocation flows, String nsrId){
         logger.info("[CONNECTIVITY-MANAGER-HANDLER] allocating slice for " + nsrId + " at time " + new Date().getTime());
         logger.debug("Start creating QOS for " + nsrId + " with queues " + queues.toString() + " and flows " + flows.toString());
@@ -72,6 +74,7 @@ public class ConnectivityManagerHandler {
         this.hostMap = requestor.getHost();
     }
 
+    @Override
     public boolean removeQoS(List<String> servers,String nsrID){
 
         List<Server> serversList;

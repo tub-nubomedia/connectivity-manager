@@ -16,6 +16,7 @@
 package org.nubomedia.qosmanager.beans.openbaton;
 
 import org.nubomedia.qosmanager.beans.connectivitymanager.ConnectivityManagerHandler;
+import org.nubomedia.qosmanager.interfaces.QoSInterface;
 import org.nubomedia.qosmanager.openbaton.FlowAllocation;
 import org.nubomedia.qosmanager.openbaton.FlowReference;
 import org.nubomedia.qosmanager.openbaton.QoSAllocation;
@@ -42,7 +43,7 @@ import java.util.concurrent.*;
 @Service
 public class QoSAllocator {
 
-    @Autowired private ConnectivityManagerHandler handler;
+    @Autowired private QoSInterface handler;
     private final ScheduledExecutorService qtScheduler = Executors.newScheduledThreadPool(1);
     private Logger logger;
 
