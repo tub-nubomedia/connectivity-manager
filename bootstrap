@@ -67,6 +67,12 @@ function compileProperties {
     if [[ $nfvoIp != "" ]]; then
          $_ex 'sed -i "s/nfvo.baseURL=localhost/nfvo.baseURL=$nfvoIp/g" /etc/nubomedia/qos.properties'
     fi
+    
+    export nfvoSec
+    read -p "Is security enable on the orchestrator [false]: " nfvoSec
+    if [[ $nfvoSec != "" ]]; then
+         $_ex 'sed -i "s/nfvo.security=false/nfvo.security=$nfvoSec/g" /etc/nubomedia/qos.properties'
+    fi
 
     export nfvoUsername
     read -p "Enter the Orchestrator username [admin]: " nfvoUsername
