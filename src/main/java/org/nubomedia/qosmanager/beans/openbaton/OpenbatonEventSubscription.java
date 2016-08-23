@@ -34,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.boot.CommandLineRunner;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -50,7 +51,7 @@ import java.util.concurrent.TimeUnit;
  * Created by maa on 11.11.15.
  */
 @Service
-public class OpenbatonEventSubscription {
+public class OpenbatonEventSubscription implements CommandLineRunner{
 
     private NFVORequestor requestor;
     private Logger logger;
@@ -62,7 +63,7 @@ public class OpenbatonEventSubscription {
     private List<String> eventIds;
 
 
-    @PostConstruct
+    
     private void init() throws SDKException, IOException {
 
         this.logger = LoggerFactory.getLogger(this.getClass());
@@ -185,4 +186,10 @@ public class OpenbatonEventSubscription {
             requestor.getEventAgent().delete(id);
         }
     }
+public void run(String... args) throws Exception{
+         init();
+    }
+
+ 
+
 }
