@@ -30,6 +30,7 @@ import javax.annotation.PostConstruct;
 public class ConnectivityManagerConfiguration {
 
     private String baseUrl;
+    private String driver;
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public String getBaseUrl() {
@@ -38,6 +39,14 @@ public class ConnectivityManagerConfiguration {
 
     public void setBaseUrl(String baseUrl) {
         this.baseUrl = baseUrl;
+    }
+
+    public String getDriver() {
+        return driver;
+    }
+
+    public void setDriver(String driver) {
+        this.driver = driver;
     }
 
     @PostConstruct

@@ -16,17 +16,8 @@
 package org.nubomedia.qosmanager.beans.openbaton;
 
 import org.nubomedia.qosmanager.beans.connectivitymanager.ConnectivityManagerHandler;
-import org.nubomedia.qosmanager.interfaces.QoSInterface;
-import org.nubomedia.qosmanager.openbaton.FlowAllocation;
-import org.nubomedia.qosmanager.openbaton.FlowReference;
-import org.nubomedia.qosmanager.openbaton.QoSAllocation;
-import org.nubomedia.qosmanager.openbaton.QoSReference;
-import org.nubomedia.qosmanager.values.Quality;
-import org.openbaton.catalogue.mano.common.Ip;
-import org.openbaton.catalogue.mano.descriptor.InternalVirtualLink;
-import org.openbaton.catalogue.mano.descriptor.VNFDConnectionPoint;
-import org.openbaton.catalogue.mano.descriptor.VirtualDeploymentUnit;
-import org.openbaton.catalogue.mano.record.VNFCInstance;
+import org.nubomedia.qosmanager.configurations.OpenstackConfiguration;
+import org.nubomedia.qosmanager.configurations.ConnectivityManagerConfiguration;
 import org.openbaton.catalogue.mano.record.VirtualNetworkFunctionRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,9 +34,12 @@ import java.util.concurrent.*;
 @Service
 public class QoSAllocator {
 
-    @Autowired private QoSInterface handler;
+    @Autowired private ConnectivityManagerHandler handler;
     private final ScheduledExecutorService qtScheduler = Executors.newScheduledThreadPool(1);
     private Logger logger;
+
+    @Autowired private OpenstackConfiguration op_configuration;
+    @Autowired private ConnectivityManagerConfiguration cm_configuration;
 
     @PostConstruct
     private void init(){
@@ -53,21 +47,36 @@ public class QoSAllocator {
     }
 
     public void addQos(Set<VirtualNetworkFunctionRecord> vnfrs,String nsrId){
-        logger.info("[QOS-ALLOCATOR] received new set of vnfrs for " + nsrId + " to create a network slice at time " + new Date().getTime());
         logger.debug("Creating ADD Thread");
-        AddQoSExecutor aqe = new AddQoSExecutor(handler,vnfrs,nsrId);
-        qtScheduler.schedule(aqe,100, TimeUnit.MILLISECONDS);
-        logger.info("[QOS-ALLOCATOR] scheduled thread to handle the NSR" + nsrId + " to create a network slice at time " + new Date().getTime());
+
+        // Check which driver to use
+        if(cm_configuration.getDriver().equals("neutron")){
+            Neutron_AddQoSExecutor aqe = new Neutron_AddQoSExecutor(vnfrs,this.op_configuration);
+            qtScheduler.schedule(aqe,100, TimeUnit.MILLISECONDS);
+        }
+        // Else , always assume we are using the cm_agent
+        else{
+            AddQoSExecutor aqe = new AddQoSExecutor(handler,vnfrs,nsrId);
+            qtScheduler.schedule(aqe,100, TimeUnit.MILLISECONDS);
+        }
         logger.debug("ADD Thread created and scheduled");
     }
 
     public void removeQos(Set<VirtualNetworkFunctionRecord> vnfrs,String nsrId){
-        logger.info("[QOS-ALLOCATOR] received new set of vnfrs for " + nsrId + " to remove a network slice at time " + new Date().getTime());
         logger.debug("Creating REMOVE Thread");
-        RemoveQoSExecutor rqe = new RemoveQoSExecutor(handler,vnfrs,nsrId);
-        qtScheduler.schedule(rqe,10,TimeUnit.SECONDS);
-        logger.info("[QOS-ALLOCATOR] scheduled thread to handle the NSR" + nsrId + " to remove a network slice at time " + new Date().getTime());
-        logger.debug("REMOVE Thread created and scheduled");
+
+        // Check which driver to use
+        if(cm_configuration.getDriver().equals("neutron")){
+            //Neutron_RemoveQoSExecutor rqe = new Neutron_RemoveQoSExecutor(vnfrs,this.op_configuration);
+            //qtScheduler.schedule(rqe,10,TimeUnit.SECONDS);
+            logger.debug("Neutron does delete the ports and the applied QoS on machien deletion, will not create REMOVE Thread");
+        }
+        // Else , always assume we are using the cm_agent
+        else{
+            RemoveQoSExecutor rqe = new RemoveQoSExecutor(handler,vnfrs,nsrId);
+            qtScheduler.schedule(rqe,10,TimeUnit.SECONDS);
+            logger.debug("REMOVE Thread created and scheduled");
+        }
 
     }
 
