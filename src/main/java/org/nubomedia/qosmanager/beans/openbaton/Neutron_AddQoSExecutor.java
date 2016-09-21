@@ -221,6 +221,34 @@ public class Neutron_AddQoSExecutor implements Runnable {
         Map<String, Quality> qualities = this.getVlrs(vnfrs);
         List<QoSReference> res = new ArrayList<>();
         for (VirtualNetworkFunctionRecord vnfr : vnfrs) {
+            if (qualities.keySet().contains(vnfr.getName())){
+                logger.debug("Found quality for "+vnfr.getName());
+                for (VirtualDeploymentUnit vdu : vnfr.getVdu()) {
+                    for (VNFCInstance vnfci : vdu.getVnfc_instance()) {
+                        //if (this.hasQoS(qualities, vnfci.getConnection_point())) {
+                        for (VNFDConnectionPoint cp : vnfci.getConnection_point()) {
+                            //logger.debug("Creating new QoSReference");
+                            QoSReference ref = new QoSReference();
+                            // In the agent, the check goes over the network name, which makes problems
+                            // if both services are using the same network, but different qualities...
+                            // We modified the check here to go over the vnfr name
+                            ref.setQuality(qualities.get(vnfr.getName()));
+                            // TODO , what will happen here if we have multiple networks? ...
+                            for (Ip ip : vnfci.getIps()) {
+                                ref.setIp(ip.getIp());
+                            }
+                            logger.debug("GET QOSES REF: adding reference to list " + ref.toString());
+                            res.add(ref);
+                        }
+                        //}
+                    }
+                }
+            }else {
+                logger.debug("There are no qualities defined for "+ vnfr.getName() +" in "+qualities.toString());
+            }
+        }
+        /*
+        for (VirtualNetworkFunctionRecord vnfr : vnfrs) {
             for (VirtualDeploymentUnit vdu : vnfr.getVdu()) {
                 for (VNFCInstance vnfci : vdu.getVnfc_instance()) {
                     if (this.hasQoS(qualities, vnfci.getConnection_point())) {
@@ -243,7 +271,7 @@ public class Neutron_AddQoSExecutor implements Runnable {
                     }
                 }
             }
-        }
+        }*/
         return res;
     }
 
@@ -263,8 +291,10 @@ public class Neutron_AddQoSExecutor implements Runnable {
                 for (String qosParam : vlr.getQos()) {
                     if (qosParam.contains("minimum_bandwith")) {
                         Quality quality = this.mapValueQuality(qosParam);
-                        res.put(vlr.getName(), quality);
-                        logger.debug("GET VIRTUAL LINK RECORD: insert in map vlr name " + vlr.getName() + " with quality " + quality);
+                        //res.put(vlr.getName(), quality);
+                        res.put(vnfr.getName(), quality);
+                        //logger.debug("GET VIRTUAL LINK RECORD: insert in map vlr name " + vlr.getName() + " with quality " + quality);
+                        logger.debug("GET VIRTUAL LINK RECORD: insert in map vlr name " + vnfr.getName() + " with quality " + quality);
                     }
                 }
             }
