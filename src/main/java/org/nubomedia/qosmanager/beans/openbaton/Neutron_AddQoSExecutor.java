@@ -22,7 +22,6 @@ import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.domain.Credentials;
 import org.jclouds.openstack.keystone.v2_0.domain.Access;
 import org.jclouds.openstack.v2_0.options.PaginationOptions;
-import org.json.JSONArray;
 import org.nubomedia.qosmanager.openbaton.QoSReference;
 import org.nubomedia.qosmanager.values.Quality;
 import org.openbaton.catalogue.mano.common.Ip;
@@ -40,16 +39,14 @@ import com.google.inject.Module;
 import com.google.common.collect.ImmutableSet;
 import org.jclouds.ContextBuilder;
 import org.jclouds.logging.slf4j.config.SLF4JLoggingModule;
-import org.json.JSONObject;
 import org.jclouds.openstack.neutron.v2.domain.Port;
 import org.jclouds.openstack.neutron.v2.features.PortApi;
 import org.jclouds.openstack.neutron.v2.domain.Ports;
 import org.nubomedia.qosmanager.configurations.OpenstackConfiguration;
+import org.nubomedia.qosmanager.beans.neutron.QoSHandler;
 
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.*;
 
 /**
@@ -59,26 +56,15 @@ public class Neutron_AddQoSExecutor implements Runnable {
 
     private Logger logger;
     private Set<VirtualNetworkFunctionRecord> vnfrs;
-
-    private NeutronApi neutronApi;
-    private NovaApi novaApi;
-    private String nova_provider;
-    private String neutron_provider;
-    private Set<String> regions;
-
-    private String qos_endpoint;
-    private String endpoint;
-    private String tenant;
-    private String username;
-    private String identity;
-    private String password;
-    private Map<String, String> qos_map = new HashMap<String, String>();
     private OpenstackConfiguration configuration;
+    private QoSHandler neutron_handler;
 
-    public Neutron_AddQoSExecutor(Set<VirtualNetworkFunctionRecord> vnfrs,OpenstackConfiguration configuration) {
+
+    public Neutron_AddQoSExecutor(Set<VirtualNetworkFunctionRecord> vnfrs,OpenstackConfiguration configuration,QoSHandler handler) {
         this.vnfrs = vnfrs;
         this.logger = LoggerFactory.getLogger(this.getClass());
         this.configuration = configuration;
+        this.neutron_handler = handler;
     }
 
 
@@ -89,21 +75,24 @@ public class Neutron_AddQoSExecutor implements Runnable {
 
     @Override
     public void run() {
+        NeutronApi neutronApi;
+        NovaApi novaApi;
+        Set<String> regions;
+        String response;
+        Map<String, String> qos_map;
         logger.debug("Received VNFR with QoS to be configured");
-
-        this.nova_provider = "openstack-nova";
-        this.neutron_provider = "openstack-neutron";
-        this.tenant=configuration.getTenant();
-        this.username=configuration.getUser();
-        this.identity=tenant + ":" + username;
-        this.password=configuration.getPassword();
-        this.qos_endpoint=configuration.getUrl()+":"+configuration.getNeutron_port()+"/"+configuration.getApi_version();
-        this.endpoint=configuration.getUrl()+":"+configuration.getAuth_port()+"/"+configuration.getApi_version();
-
-        logger.debug("tenant = "+this.tenant);
-        logger.debug("user = "+this.username);
-        logger.debug("qos_endpoint = "+this.qos_endpoint);
-        logger.debug("endpoint = "+this.endpoint);
+        String nova_provider = "openstack-nova";
+        String neutron_provider = "openstack-neutron";
+        String tenant=configuration.getTenant();
+        String username=configuration.getUser();
+        String identity=tenant + ":" + username;
+        String password=configuration.getPassword();
+        String qos_endpoint=configuration.getUrl()+":"+configuration.getNeutron_port()+"/"+configuration.getApi_version();
+        String endpoint=configuration.getUrl()+":"+configuration.getAuth_port()+"/"+configuration.getApi_version();
+        logger.debug("tenant = "+tenant);
+        logger.debug("user = "+username);
+        logger.debug("qos_endpoint = "+qos_endpoint);
+        logger.debug("endpoint = "+endpoint);
 
         // Getting the server names and their quality, all we need to talk to neutron
         List<QoSReference> qoses = this.getQosesRefs(vnfrs);
@@ -121,16 +110,17 @@ public class Neutron_AddQoSExecutor implements Runnable {
                     }
                  ]
         */
-        // We will steal the x-auth token here, to be able to directly communicate with the neutron qos rest api
+        // Use nova to list our endpoints at a later stage
         Iterable<Module> modules = ImmutableSet.<Module>of(new SLF4JLoggingModule());
         novaApi = ContextBuilder.newBuilder(nova_provider)
                 .endpoint(endpoint)
                 .credentials(identity, password)
                 .modules(modules)
                 .buildApi(NovaApi.class);
+        // We will steal the x-auth token here, to be able to directly communicate with the neutron qos rest api
         ContextBuilder
                 contextBuilder =
-                ContextBuilder.newBuilder("openstack-nova")
+                ContextBuilder.newBuilder(nova_provider)
                         .credentials(identity, password)
                         .endpoint(endpoint);
         ComputeServiceContext context = contextBuilder.buildView(ComputeServiceContext.class);
@@ -144,46 +134,16 @@ public class Neutron_AddQoSExecutor implements Runnable {
                         .credential(password)
                         .build());
         logger.debug("Received auth token");
-        HttpURLConnection connection = null;
-        URL url = null;
-        // so for neutron we need the qos-policy list
-        try {
-            url = new URL(qos_endpoint + "/qos/policies");
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-            connection.setDoOutput(true);
-            connection.setRequestProperty("Accept", "application/json");
-            connection.setRequestProperty("Content-Type", "application/json");
-            connection.setRequestProperty("User-Agent", "python-neutronclient");
-            connection.setRequestProperty("X-Auth-Token", access.getToken().getId());
-            InputStream is = connection.getInputStream();
-            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
-            StringBuilder response = new StringBuilder();
-            String line;
-            while ((line = rd.readLine()) != null) {
-                response.append(line);
-                response.append('\r');
-            }
-            rd.close();
-            connection.disconnect();
-            //Parse json to object
-            //logger.debug("Response of final request is: " + response.toString());
-            JSONObject ans = new JSONObject(response.toString());
-            //logger.debug("Created JSON-Object : "+ans.toString());
-            JSONArray qos_p = ans.getJSONArray("policies");
-            //logger.debug("Created JSON-Array : "+qos_p.toString());
-            logger.debug("There are "+qos_p.length() + " qos-policies available");
-            for (int i = 0; i < qos_p.length(); i++){
-                JSONObject o = qos_p.getJSONObject(i);
-                //logger.debug(o.toString());
-                qos_map.put(o.getString("name"),o.getString("id"));
-            }
-        } catch (IOException e) {
-            logger.error("Problem contacting openstack-neutron");
-            e.printStackTrace();
-            // If we have found a problem, we should probably end this thread
+
+        // Check which QoS policies are available already
+        response = neutron_handler.neutron_http_connection(qos_endpoint + "/qos/policies", "GET", access, null);
+        if (response == null){
+            logger.error("Error trying to list existing QoS policies");
             return;
         }
+        // Save those in a hash map for later usage
+        qos_map = neutron_handler.parsePolicyMap(response);
+        logger.debug(qos_map.toString());
         // With neutron we collect the necessary values to know which ports to modify
         neutronApi = ContextBuilder.newBuilder(neutron_provider)
                 .endpoint(endpoint)
@@ -202,143 +162,44 @@ public class Neutron_AddQoSExecutor implements Runnable {
                     if (ips.contains(ref.getIp())) {
                         logger.debug("port id : " + p.getId() + " will get qos " + ref.getQuality().name());
                         // if the quaility is missing, we should CREATE IT
-                        // TODO : if the quality exists, check if max_bandwidth is set correctly
+                        // TODO : if the quality exists, check if max_bandwidth is set correctly + if its shared and accessable
                         if(qos_map.get(ref.getQuality().name())==null){
                             logger.debug("Did not found qos-policy with name "+ref.getQuality().name());
                             logger.debug("Will create qos-policy : "+ref.getQuality().name());
-                            JSONObject pol_payload = new JSONObject("{\"policy\":{\"name\":\""+ref.getQuality().name()+"\",\"description\":\"generated by connectivity manager\",\"shared\":\"false\"}}");
-                            logger.debug("JSON to be send to neutron : "+pol_payload.toString());
-                            connection = null;
-                            url = null;
-                            try {
-                                url = new URL(qos_endpoint + "/qos/policies");
-                                connection = (HttpURLConnection) url.openConnection();
-                                connection.setRequestMethod("POST");
-                                connection.setDoOutput(true);
-                                //connection.setRequestProperty("Accept", "application/json");
-                                //connection.setRequestProperty("Content-Type", "application/json");
-                                connection.setRequestProperty("User-Agent", "python-neutronclient");
-                                connection.setRequestProperty("X-Auth-Token", access.getToken().getId());
-                                OutputStreamWriter pol_output = new OutputStreamWriter(connection.getOutputStream());
-                                pol_output.write(pol_payload.toString());
-                                pol_output.flush();
-                                pol_output.close();
-                                InputStream pol_is = connection.getInputStream();
-                                BufferedReader pol_rd = new BufferedReader(new InputStreamReader(pol_is));
-                                StringBuilder pl_response = new StringBuilder();
-                                String pl_line;
-                                while ((pl_line = pol_rd.readLine()) != null) {
-                                    pl_response.append(pl_line);
-                                    pl_response.append('\r');
-                                }
-                                pol_rd.close();
-                                connection.disconnect();
-                                // At this point we created the policy, now we also need to create the bandwidth limiting rule
-                                logger.debug("Created policy :"+ pl_response.toString());
-                                JSONObject created_pol = new JSONObject(pl_response.toString());
-                                String created_pol_id = created_pol.getJSONObject("policy").getString("id");
-                                connection = null;
-                                url = null;
-                                // TODO : fix creating bandwidth rule
-                                url = new URL(qos_endpoint + "/qos/policies/"+created_pol_id+"/bandwidth_limit_rules/");
-                                JSONObject bw_payload = new JSONObject("{\"bandwidth_limit_rule\":{\"max_kbps\":\""+ref.getQuality().getMax_rate()+"\"}}");
-                                logger.debug("JSON to be send to neutron : "+bw_payload.toString());
-                                connection = (HttpURLConnection) url.openConnection();
-                                connection.setRequestMethod("POST");
-                                connection.setDoOutput(true);
-                                //connection.setRequestProperty("Accept", "application/json");
-                                //connection.setRequestProperty("Content-Type", "application/json");
-                                connection.setRequestProperty("User-Agent", "python-neutronclient");
-                                connection.setRequestProperty("X-Auth-Token", access.getToken().getId());
-                                OutputStreamWriter bw_output = new OutputStreamWriter(connection.getOutputStream());
-                                bw_output.write(bw_payload.toString());
-                                bw_output.flush();
-                                bw_output.close();
-                                InputStream bw_is = connection.getInputStream();
-                                BufferedReader bw_rd = new BufferedReader(new InputStreamReader(bw_is));
-                                StringBuilder bw_response = new StringBuilder();
-                                String bw_line;
-                                while ((bw_line = bw_rd.readLine()) != null) {
-                                    bw_response.append(bw_line);
-                                    bw_response.append('\r');
-                                }
-                                bw_rd.close();
-                                connection.disconnect();
-                                logger.debug("Created bandwidth rule for policy"+created_pol_id +": "+ bw_response.toString());
-                            } catch (IOException e) {
-                                logger.error("Problem contacting openstack-neutron");
-                                e.printStackTrace();
-                                // If we have found a problem, we should probably end this thread
+                            // Creating the not existing QoS policy
+                            response = neutron_handler.neutron_http_connection(qos_endpoint + "/qos/policies", "POST", access, neutron_handler.createPolicyPayload(ref.getQuality().name()));
+                            if (response == null){
+                                logger.error("Error trying to create QoS policy");
                                 return;
                             }
+                            logger.debug("Created policy :"+ response);
+                            String created_pol_id = neutron_handler.parsePolicyId(response);
+                            // Since we now have the correct id of the policy , lets create the bandwidth rule
+                            response = neutron_handler.neutron_http_connection(qos_endpoint + "/qos/policies/" + created_pol_id + "/bandwidth_limit_rules", "POST", access, neutron_handler.createBandwidthLimitRulePayload(ref.getQuality().getMax_rate()));
+                            if (response == null){
+                                logger.error("Error trying to create bandwidth rule for QoS policy");
+                                return;
+                            }
+                            logger.debug("Created bandwidth rule for policy"+created_pol_id +": "+ response);
                         }
-                        logger.debug("associated qos_policy is "+ qos_map.get(ref.getQuality().name()));
+                        // Check which QoS policies are available already
+                        response = neutron_handler.neutron_http_connection(qos_endpoint + "/qos/policies", "GET", access, null);
+                        if (response == null){
+                            logger.error("Error trying to list existing QoS policies");
+                            return;
+                        }
+                        // Save those in a hash map for later usage
+                        qos_map = neutron_handler.parsePolicyMap(response);
+                        logger.debug(qos_map.toString());
 
+                        // At this point we can be sure the policy exists
+                        logger.debug("associated qos_policy is "+ qos_map.get(ref.getQuality().name()));
+                        // Check if the port already got the correct qos-policy assigned
                         // TODO : if port already got the qos_policy we want to add, abort ( to avoid sending more traffic )
-                        JSONObject payload = new JSONObject("{\"port\":{\"qos_policy_id\":\""+qos_map.get(ref.getQuality().name())+"\"}}");
-                        connection = null;
-                        url = null;
-                        // Since we now know what qos_policy_id to use, lets update the port !
-                        try {
-                            url = new URL(qos_endpoint + "/ports/"+p.getId()+".json");
-                            connection = (HttpURLConnection) url.openConnection();
-                            connection.setRequestMethod("GET");
-                            connection.setDoOutput(true);
-                            connection.setRequestProperty("Accept", "application/json");
-                            connection.setRequestProperty("Content-Type", "application/json");
-                            connection.setRequestProperty("User-Agent", "python-neutronclient");
-                            connection.setRequestProperty("X-Auth-Token", access.getToken().getId());
-                            InputStream is = connection.getInputStream();
-                            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
-                            StringBuilder response = new StringBuilder();
-                            String line;
-                            while ((line = rd.readLine()) != null) {
-                                response.append(line);
-                                response.append('\r');
-                            }
-                            rd.close();
-                            connection.disconnect();
-                            logger.debug("Current port information for "+ref.getIp() +" :" + response.toString());
-                        } catch (IOException e) {
-                            logger.error("Problem contacting openstack-neutron");
-                            e.printStackTrace();
-                            // If we have found a problem, we should probably end this thread
-                            return;
-                        }
-                        connection = null;
-                        url = null;
-                        // Since we now know what qos_policy_id to use, lets update the port !
-                        try {
-                            url = new URL(qos_endpoint + "/ports/"+p.getId()+".json");
-                            connection = (HttpURLConnection) url.openConnection();
-                            connection.setRequestMethod("PUT");
-                            connection.setDoOutput(true);
-                            connection.setRequestProperty("Accept", "application/json");
-                            connection.setRequestProperty("Content-Type", "application/json");
-                            connection.setRequestProperty("User-Agent", "python-neutronclient");
-                            connection.setRequestProperty("X-Auth-Token", access.getToken().getId());
-                            OutputStreamWriter output = new OutputStreamWriter(connection.getOutputStream());
-                            output.write(payload.toString());
-                            output.flush();
-                            output.close();
-                            InputStream is = connection.getInputStream();
-                            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
-                            StringBuilder response = new StringBuilder();
-                            String line;
-                            while ((line = rd.readLine()) != null) {
-                                response.append(line);
-                                response.append('\r');
-                            }
-                            rd.close();
-                            connection.disconnect();
-                            //logger.debug("Response of final request is: " + response.toString());
-                            logger.debug("Finished applying QoS for "+ref.getIp());
-                        } catch (IOException e) {
-                            logger.error("Problem contacting openstack-neutron");
-                            e.printStackTrace();
-                            // If we have found a problem, we should probably end this thread
-                            return;
-                        }
+                        response = neutron_handler.neutron_http_connection(qos_endpoint + "/ports/" + p.getId() + ".json", "GET", access, null);
+                        logger.debug("Port information before updating : "+ response);
+                        // update port
+                        response = neutron_handler.neutron_http_connection(qos_endpoint + "/ports/" + p.getId() + ".json", "PUT", access, neutron_handler.createPolicyUpdatePayload(qos_map.get(ref.getQuality().name())));
                     }
                 }
                 //logger.debug("Finished iterating over QoS references");
@@ -353,7 +214,6 @@ public class Neutron_AddQoSExecutor implements Runnable {
             logger.error("Could not close novaAPI / neutronAPI");
             e.printStackTrace();
         }
-
     }
 
     // Modified method to collect the only information we need for neutron

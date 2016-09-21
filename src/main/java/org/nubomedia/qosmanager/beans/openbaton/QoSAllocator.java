@@ -16,6 +16,7 @@
 package org.nubomedia.qosmanager.beans.openbaton;
 
 import org.nubomedia.qosmanager.beans.connectivitymanager.ConnectivityManagerHandler;
+import org.nubomedia.qosmanager.beans.neutron.QoSHandler;
 import org.nubomedia.qosmanager.configurations.OpenstackConfiguration;
 import org.nubomedia.qosmanager.configurations.ConnectivityManagerConfiguration;
 import org.openbaton.catalogue.mano.record.VirtualNetworkFunctionRecord;
@@ -35,6 +36,7 @@ import java.util.concurrent.*;
 public class QoSAllocator {
 
     @Autowired private ConnectivityManagerHandler handler;
+    private QoSHandler neutron_handler = new QoSHandler();
     private final ScheduledExecutorService qtScheduler = Executors.newScheduledThreadPool(1);
     private Logger logger;
 
@@ -51,8 +53,9 @@ public class QoSAllocator {
 
         // Check which driver to use
         if(cm_configuration.getDriver().equals("neutron")){
-            Neutron_AddQoSExecutor aqe = new Neutron_AddQoSExecutor(vnfrs,this.op_configuration);
+            Neutron_AddQoSExecutor aqe = new Neutron_AddQoSExecutor(vnfrs,this.op_configuration,neutron_handler);
             qtScheduler.schedule(aqe,100, TimeUnit.MILLISECONDS);
+
         }
         // Else , always assume we are using the cm_agent
         else{
@@ -69,7 +72,7 @@ public class QoSAllocator {
         if(cm_configuration.getDriver().equals("neutron")){
             //Neutron_RemoveQoSExecutor rqe = new Neutron_RemoveQoSExecutor(vnfrs,this.op_configuration);
             //qtScheduler.schedule(rqe,10,TimeUnit.SECONDS);
-            logger.debug("Neutron does delete the ports and the applied QoS on machien deletion, will not create REMOVE Thread");
+            logger.debug("Neutron does delete the ports and the applied QoS on machine deletion, will not create REMOVE Thread");
         }
         // Else , always assume we are using the cm_agent
         else{
