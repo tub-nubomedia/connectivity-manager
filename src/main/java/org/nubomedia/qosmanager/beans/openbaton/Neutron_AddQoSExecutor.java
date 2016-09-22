@@ -175,7 +175,9 @@ public class Neutron_AddQoSExecutor implements Runnable {
                             logger.debug("Created policy :"+ response);
                             String created_pol_id = neutron_handler.parsePolicyId(response);
                             // Since we now have the correct id of the policy , lets create the bandwidth rule
-                            response = neutron_handler.neutron_http_connection(qos_endpoint + "/qos/policies/" + created_pol_id + "/bandwidth_limit_rules", "POST", access, neutron_handler.createBandwidthLimitRulePayload(ref.getQuality().getMax_rate()));
+                            // The native cm agent metered the bandwidth a bit different
+                            String bandwidth = String.valueOf(Integer.parseInt(ref.getQuality().getMax_rate()) /1000);
+                            response = neutron_handler.neutron_http_connection(qos_endpoint + "/qos/policies/" + created_pol_id + "/bandwidth_limit_rules", "POST", access, neutron_handler.createBandwidthLimitRulePayload(bandwidth));
                             if (response == null){
                                 logger.error("Error trying to create bandwidth rule for QoS policy");
                                 return;
@@ -225,7 +227,6 @@ public class Neutron_AddQoSExecutor implements Runnable {
                 logger.debug("Found quality for "+vnfr.getName());
                 for (VirtualDeploymentUnit vdu : vnfr.getVdu()) {
                     for (VNFCInstance vnfci : vdu.getVnfc_instance()) {
-                        //if (this.hasQoS(qualities, vnfci.getConnection_point())) {
                         for (VNFDConnectionPoint cp : vnfci.getConnection_point()) {
                             //logger.debug("Creating new QoSReference");
                             QoSReference ref = new QoSReference();
@@ -240,38 +241,12 @@ public class Neutron_AddQoSExecutor implements Runnable {
                             logger.debug("GET QOSES REF: adding reference to list " + ref.toString());
                             res.add(ref);
                         }
-                        //}
                     }
                 }
             }else {
                 logger.debug("There are no qualities defined for "+ vnfr.getName() +" in "+qualities.toString());
             }
         }
-        /*
-        for (VirtualNetworkFunctionRecord vnfr : vnfrs) {
-            for (VirtualDeploymentUnit vdu : vnfr.getVdu()) {
-                for (VNFCInstance vnfci : vdu.getVnfc_instance()) {
-                    if (this.hasQoS(qualities, vnfci.getConnection_point())) {
-                        //QoSAllocation tmp = new QoSAllocation();
-                        //tmp.setServerName(vnfci.getHostname());
-                        //List<QoSReference> ifaces = new ArrayList<>();
-                        for (VNFDConnectionPoint cp : vnfci.getConnection_point()) {
-                            if (qualities.keySet().contains(cp.getVirtual_link_reference())) {
-                                QoSReference ref = new QoSReference();
-                                ref.setQuality(qualities.get(cp.getVirtual_link_reference()));
-                                for (Ip ip : vnfci.getIps()) {
-                                    if (ip.getNetName().equals(cp.getVirtual_link_reference())) {
-                                        ref.setIp(ip.getIp());
-                                    }
-                                }
-                                logger.debug("GET QOSES REF: adding reference to list " + ref.toString());
-                                res.add(ref);
-                            }
-                        }
-                    }
-                }
-            }
-        }*/
         return res;
     }
 
