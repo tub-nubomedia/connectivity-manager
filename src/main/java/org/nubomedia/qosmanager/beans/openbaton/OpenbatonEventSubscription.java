@@ -68,12 +68,7 @@ public class OpenbatonEventSubscription implements CommandLineRunner{
 
         this.logger = LoggerFactory.getLogger(this.getClass());
 
-        if (configuration.isSecurity()){
-            this.requestor = new NFVORequestor(configuration.getUsername(), configuration.getPassword(), configuration.getBaseURL(), configuration.getBasePort(), "1");
-        }
-        else{
-            this.requestor = new NFVORequestor("","",configuration.getBaseURL(),configuration.getBasePort(),"1");
-        }
+        this.requestor = new NFVORequestor(configuration.getUsername(), configuration.getPassword(), "*", false, configuration.getBaseURL(), configuration.getBasePort(), "1");
 
         this.eventIds = new ArrayList<>();
 
