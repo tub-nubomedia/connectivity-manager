@@ -124,9 +124,22 @@ public class AddQoSExecutor implements Runnable{
         Map<String, Quality> qualities = this.getVlrs(vnfrs);
         FlowAllocation res = new FlowAllocation();
 
+        // Added another variable holding the network name
+        String vlr_net_name= null;
         for(String vlr : qualities.keySet()){
+            for(VirtualNetworkFunctionRecord vnfr : vnfrs){
+                if (vlr.equals(vnfr.getName())){
+                    for(VirtualDeploymentUnit vdu : vnfr.getVdu()) {
+                        for (VNFCInstance vnfci : vdu.getVnfc_instance()) {
+                            for(VNFDConnectionPoint cp : vnfci.getConnection_point()){
+                                vlr_net_name = cp.getVirtual_link_reference();
+                            }
+                        }
+                    }
+                }
+            }
             List<FlowReference> references = this.findCprFromVirtualLink(vnfrs,vlr);
-            res.addVirtualLink(vlr,references);
+            res.addVirtualLink(vlr_net_name,references);
         }
 
         return res;
