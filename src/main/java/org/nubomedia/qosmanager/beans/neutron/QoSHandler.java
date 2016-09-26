@@ -89,8 +89,10 @@ public class QoSHandler {
             //logger.debug("Response of final request is: " + response.toString());
             logger.debug("Got response from neutron : "+response.toString());
             return response.toString();
-        } catch (IOException e) {
+        } catch (Exception e) {
             logger.error("Problem contacting openstack-neutron");
+            logger.error(e.getMessage());
+            logger.error(e.toString());
             e.printStackTrace();
             // If we have found a problem, we should probably end this thread
             return null;
@@ -102,20 +104,68 @@ public class QoSHandler {
      * @return a Hash Map containing the policy names and their ids
      */
     public Map<String, String> parsePolicyMap(String response){
-        logger.debug("Parsing existing policies");
-        // TODO : catch null objects
-        Map<String,String> tmp= new HashMap<String, String>();
-        JSONObject ans = new JSONObject(response);
-        //logger.debug("Created JSON-Object : "+ans.toString());
-        JSONArray qos_p = ans.getJSONArray("policies");
-        //logger.debug("Created JSON-Array : "+qos_p.toString());
-        logger.debug("There are "+qos_p.length() + " qos-policies available");
-        for (int i = 0; i < qos_p.length(); i++){
-            JSONObject o = qos_p.getJSONObject(i);
-            //logger.debug(o.toString());
-            tmp.put(o.getString("name"),o.getString("id"));
+        Map<String,String> tmp = new HashMap<String, String>();
+        try {
+            logger.debug("Parsing existing policies");
+            // TODO : catch null objects
+            JSONObject ans = new JSONObject(response);
+            //logger.debug("Created JSON-Object : "+ans.toString());
+            JSONArray qos_p = ans.getJSONArray("policies");
+            //logger.debug("Created JSON-Array : "+qos_p.toString());
+            logger.debug("There are "+qos_p.length() + " qos-policies available");
+            for (int i = 0; i < qos_p.length(); i++){
+                JSONObject o = qos_p.getJSONObject(i);
+                //logger.debug(o.toString());
+                tmp.put(o.getString("name"),o.getString("id"));
+            }
+        } catch (Exception e){
+            logger.error(e.getMessage());
+            logger.error(e.toString());
         }
         return tmp;
+    }
+
+    public boolean checkForBandwidthRule(String response,String max_kbps){
+        try {
+            logger.debug("Parsing policy");
+            int bw = Integer.parseInt(max_kbps);
+            JSONObject policy = new JSONObject(response).getJSONObject("policy");
+            // Check if the policy is shared
+            if (policy.getBoolean("shared")){
+                JSONArray pol_rules = policy.getJSONArray("rules");
+                for (int i = 0; i < pol_rules.length(); i++){
+                    JSONObject o = pol_rules.getJSONObject(i);
+                    // Check if the policy got the right max_kbs assigned
+                    if(o.getInt("max_kbps")==bw){
+                        return true;
+                    }
+                }
+            }
+        } catch (Exception e){
+            logger.error(e.getMessage());
+            logger.error(e.toString());
+        }
+        return false;
+    }
+
+    public boolean checkPortQoSPolicy(String response,String id){
+        String port_qos_id = null;
+        try {
+            Object o = new JSONObject(response).getJSONObject("port").get("qos_policy_id");
+            if (o == null){
+                return false;
+            } else {
+                port_qos_id = (String) o;
+                if(port_qos_id.equals(id)){
+                    // we do not need a update of the port
+                    return true;
+                }
+            }
+        } catch (ClassCastException e){
+            logger.debug("port does not have a qos policy assigned");
+        }
+        // We need a update of the port
+        return false;
     }
 
 
