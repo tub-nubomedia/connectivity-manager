@@ -17,7 +17,7 @@ package org.nubomedia.qosmanager.beans.openbaton;
 
 import org.nubomedia.qosmanager.beans.connectivitymanager.ConnectivityManagerHandler;
 import org.nubomedia.qosmanager.beans.neutron.QoSHandler;
-import org.nubomedia.qosmanager.configurations.OpenstackConfiguration;
+import org.nubomedia.qosmanager.configurations.NfvoConfiguration;
 import org.nubomedia.qosmanager.configurations.ConnectivityManagerConfiguration;
 import org.openbaton.catalogue.mano.record.VirtualNetworkFunctionRecord;
 import org.slf4j.Logger;
@@ -40,7 +40,7 @@ public class QoSAllocator {
     private final ScheduledExecutorService qtScheduler = Executors.newScheduledThreadPool(1);
     private Logger logger;
 
-    @Autowired private OpenstackConfiguration op_configuration;
+    @Autowired private NfvoConfiguration nfvo_configuration;
     @Autowired private ConnectivityManagerConfiguration cm_configuration;
 
     @PostConstruct
@@ -53,7 +53,7 @@ public class QoSAllocator {
 
         // Check which driver to use
         if(cm_configuration.getDriver().equals("neutron")){
-            Neutron_AddQoSExecutor aqe = new Neutron_AddQoSExecutor(vnfrs,this.op_configuration,neutron_handler);
+            Neutron_AddQoSExecutor aqe = new Neutron_AddQoSExecutor(vnfrs,this.nfvo_configuration,neutron_handler);
             qtScheduler.schedule(aqe,100, TimeUnit.MILLISECONDS);
 
         }
