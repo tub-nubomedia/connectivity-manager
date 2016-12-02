@@ -9,7 +9,7 @@ set -e
 export DEBIAN_FRONTEND=noninteractive
 _dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-_connectivity_manager_base_repo="https://github.com/tub-nubomedia/connectivity-manager.git"
+_connectivity_manager_base_repo="https://github.com/nubomedia/connectivity-manager.git"
 _tag="develop"
 #_tag="tags/1.1"
 
